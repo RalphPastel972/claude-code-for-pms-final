@@ -96,6 +96,18 @@ Names still to confirm from the wiki **Team directory**.
   The term doesn't appear in the course files yet; check the wiki Glossary.
   Closest thing in the data: `responders.area` ("the part of the city this
   responder usually covers").
+  Starting point: "Where the jobs went: before and after 4.2"
+  (https://claude.ai/artifact/NoFnzvwhuF4hAk87jNbqDu, author unknown, from
+  outside my org). It uses "home base" for a hero's own area. Its claims, to
+  check against the data before reusing:
+  - Before 4.2, every job was taken by the hero who lives in that area. (My
+    own check agrees: 0 of 186 out-of-area pings were taken before 4.2.)
+  - After 4.2, jobs in Uptown, Harborside and Old Town go to heroes from
+    other areas, and Eastgate's jobs moved from Meteor Mite to The Gale.
+  - Each hero is pinged for the same 1–3 neighbouring areas before and after;
+    nobody was pinged for a new area. What changed is who's first in line.
+  - The rise in untaken jobs is in the neighbouring areas, not the four
+    quiet areas themselves.
 
 ### Where to look
 - Wiki: About Rook, Rook Dispatch, Glossary, Releases (4.0 to 4.2), Q3 roadmap,
