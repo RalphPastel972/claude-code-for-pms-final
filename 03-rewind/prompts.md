@@ -45,3 +45,6 @@ reminder for future me : I need to analyse the concept of "Home base" and it's i
 
 ### 9.
 can i type "wrap up" but still work on this analysis and wrap up again the same day?
+
+### 10.
+This claude prompt is interesting. Save it in my github so I can do the analysis later : https://claude.ai/artifact/NoFnzvwhuF4hAk87jNbqDu
