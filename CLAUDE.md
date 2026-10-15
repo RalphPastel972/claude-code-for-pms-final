@@ -91,6 +91,22 @@ Names still to confirm from the wiki **Team directory**.
 2. Write the missing description of how Dispatch decides who gets pinged.
    Source material: the staff engineer and `00-rook/code/dispatch-routing/`.
 
+### Recommendations to take to the staff engineer and EM (from the Module 3 analysis)
+How to get the four responders (Vesper, Farlight, The Undertow, Meteor Mite)
+out of the trap:
+1. Reset their acceptance scores: a stopgap only. With 60s they would fall
+   back to zero in about 13 pings (1–2 weeks).
+2. Fix why they miss: put the ping wait back to 90s, or somewhere between 60
+   and 90. Stops new misses, but doesn't lift scores already at zero.
+3. Change the rule in `history.py`, for everyone: a missed ping costs less
+   than (or nothing like) a "no", and/or scores drift back to the middle over
+   time (the open 2019 TODO).
+My pick: 2 + 3, with 1 as a short-term fix if needed. None of this undoes the
+proximity change, which is the part wide-geography responders asked for.
+Cautions: "the other 12 get their far-away work back" is a prediction to check
+after any change, and whether a miss should count like a "no" is a policy
+call, not a bug fix.
+
 ### My to-dos
 - Analyse the concept of "home base" and its impact before and after 4.2.
   The term doesn't appear in the course files yet; check the wiki Glossary.
@@ -125,3 +141,8 @@ Names still to confirm from the wiki **Team directory**.
 - Before 4.2 the four looked like everyone else (pings, acceptance, about 22s to turn down). Why they started missing is unknown: the database has no answer time for accepted pings. Ask the EM for time-to-answer logs per responder, 29 Jun – 11 Aug.
 - Tickets match the pings exactly (every count handlers quote checks out) but are skewed. Vesper's handler (Aunt Dot) and Meteor Mite's (Kip) have never filed a ticket. Corporal Ashgrove and Halfmoon get many tickets for a 20–25% drop. Many tickets are word-for-word identical, so ask the support lead whether those are templates. Some filter tickets are real scope bugs (per computer, shared computer, silent resets), not cosmetic.
 - Tooling note: the database returns at most 1,000 rows per query, so split bigger pulls.
+- Module 4 code read. Only one thing in the code puts points back: taking a job (+0.08, `history.py` `record_accepted`, called only from `offer.py`). A "no" or a miss takes off 0.12, and nothing else changes scores: no recovery over time, no reset, and handler overrides don't touch it. Possible flaws to raise with the staff engineer: the 60s clock starts when the job is sent, not when the phone buzzes, and scores appear to be kept only in memory (a restart may wipe them).
+- 4.2 was built exactly as briefed, but both briefs are one line with no target or evidence. Nothing anywhere explains the 90s→60s cut (briefs, release note, handover, tickets, interviews). Its best-case gain was under 1 second per callout (22 misses in 44 days). Callouts now take longer to fill: 21s→32s to the winning ping, and 22%→33% need 2+ pings. The proximity change missed its own goal: the own-area responder is asked first for 61% of callouts, down from 80%. A zero record used to lose to anyone up to 40 min further away (Priya's exact complaint); now about 19 min.
+- The September interviews back the data: Vesper runs downstairs and loses the "race"; Captain Vantage had "one boot on"; Kip says Meteor Mite is dead quiet while The Gale is "exhausted" (The Gale went from 13 to 19 pings a week). Neighbours now cover the four's areas (59% taken, against 0 of 186 out-of-area pings before 4.2), even though the Glossary says covering other areas ("mutual aid") isn't supported yet (Q4). The other 12 still miss about 6% at home (it was 0.6%), steady since 4.2.
+- The Dispatch wiki page defines a "time-to-accept" metric, so answer times probably exist somewhere. Ask the EM for them per responder, plus the push delay to the phone, and whether there was an unwritten reason for 60s (ask the EM, the staff engineer, or Priya via the EM).
+- Draft developer asks: make a miss cost less than a "no"; let scores drift back over time; ping wait back to 90s or in between; start the clock on delivery; alert the handler when an available responder goes quiet or their score drops low; show handlers why; save scores durably; log time-to-answer; reset the four once. Optional stopgap: raise the score floor in `config.py` (e.g. 0.3).
