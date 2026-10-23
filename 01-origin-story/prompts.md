@@ -33,3 +33,6 @@ do we know how long after the release of 4.2 we noticed the drop in quality?
 
 ### 4.
 Do we have clues or evidence that lead to believe that the changes brought with 4.2 were necessary?
+
+### 5.
+Based on everything you now know about Rook, what should I be worried about that nobody has told me?

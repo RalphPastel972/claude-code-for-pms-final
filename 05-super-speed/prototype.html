@@ -1,0 +1,393 @@
+<title>Gone Quiet Prototype</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: story controls on top, then a dispatch console (left) beside the responder's phone (right); rules strip below. */
+:root {
+  --bg: #eef1f4;
+  --panel: #ffffff;
+  --ink: #17202a;
+  --muted: #5b6875;
+  --line: #d5dce3;
+  --accent: #1f5f8b;
+  --accent-ink: #ffffff;
+  --warn-bg: #fff3d6;
+  --warn-line: #e0a526;
+  --warn-ink: #6b4a00;
+  --ok-bg: #e2f4ec;
+  --ok-ink: #11593a;
+  --busy-bg: #fde8e4;
+  --busy-ink: #8a2a17;
+  --phone: #1b232c;
+  --phone-screen: #f7f9fb;
+  --font-ui: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11161c; --panel: #19212a; --ink: #e6ecf1; --muted: #9aa8b5; --line: #2c3743;
+    --accent: #5aa7db; --accent-ink: #0b1620; --warn-bg: #3a2e10; --warn-line: #c99320; --warn-ink: #f5d78c;
+    --ok-bg: #12352a; --ok-ink: #8fe0bb; --busy-bg: #3d1d17; --busy-ink: #f4ab9b;
+    --phone: #05080b; --phone-screen: #1f2933; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11161c; --panel: #19212a; --ink: #e6ecf1; --muted: #9aa8b5; --line: #2c3743;
+  --accent: #5aa7db; --accent-ink: #0b1620; --warn-bg: #3a2e10; --warn-line: #c99320; --warn-ink: #f5d78c;
+  --ok-bg: #12352a; --ok-ink: #8fe0bb; --busy-bg: #3d1d17; --busy-ink: #f4ab9b;
+  --phone: #05080b; --phone-screen: #1f2933; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.5;
+  margin: 0; padding-block: 24px 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 1080px; margin: 0 auto; display: grid; gap: 16px; }
+h1 { font-size: 1.6rem; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+.sub { color: var(--muted); margin: 4px 0 0; max-width: 70ch; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.tag { font-family: var(--font-data); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 8px; border: 1px solid var(--line); border-radius: 4px; color: var(--muted); background: var(--panel); }
+.controls { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; justify-content: space-between; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--panel); }
+.seg button { font: inherit; font-weight: 500; border: 0; background: transparent; color: var(--ink); padding: 8px 16px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.stepper { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.btn { font: inherit; font-weight: 500; border: 1px solid var(--line); background: var(--panel); color: var(--ink); padding: 8px 14px; border-radius: 8px; cursor: pointer; }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.btn:disabled { opacity: 0.45; cursor: default; }
+button:focus-visible { outline: 3px solid var(--warn-line); outline-offset: 2px; }
+.dots { display: flex; gap: 6px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
+.dot.on { background: var(--accent); }
+.story { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; }
+.story .step-name { font-family: var(--font-data); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.story p { margin: 4px 0 0; font-size: 1.05rem; max-width: 75ch; }
+.stage { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 16px; align-items: start; }
+@media (max-width: 820px) { .stage { grid-template-columns: minmax(0, 1fr); } .phone-col { justify-self: center; } }
+.console { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; min-width: 0; }
+.console-bar { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; padding: 10px 16px; border-bottom: 1px solid var(--line); font-size: 0.85rem; color: var(--muted); }
+.console-bar strong { color: var(--ink); font-weight: 600; }
+.cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 16px; }
+@media (max-width: 560px) { .cards { grid-template-columns: minmax(0, 1fr); } }
+.card { border: 1px solid var(--line); border-radius: 8px; padding: 14px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.card-head { display: flex; justify-content: space-between; align-items: start; gap: 8px; }
+.card-name { font-weight: 600; font-size: 1.05rem; }
+.card-meta { font-size: 0.82rem; color: var(--muted); }
+.pill { font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+.pill.avail { background: var(--ok-bg); color: var(--ok-ink); }
+.pill.busy { background: var(--busy-bg); color: var(--busy-ink); }
+.stat { display: flex; justify-content: space-between; font-size: 0.88rem; border-top: 1px solid var(--line); padding-top: 8px; }
+.stat b { font-family: var(--font-data); font-weight: 500; font-variant-numeric: tabular-nums; }
+.warn { background: var(--warn-bg); border: 1px solid var(--warn-line); border-radius: 6px; padding: 10px 12px; color: var(--warn-ink); display: grid; gap: 8px; }
+.warn-title { font-weight: 600; }
+.warn p { margin: 0; font-size: 0.88rem; }
+.bars { display: flex; align-items: flex-end; gap: 3px; height: 44px; }
+.bars span { flex: 1; background: var(--warn-line); border-radius: 2px 2px 0 0; min-height: 2px; }
+.bars-cap { display: flex; justify-content: space-between; font-family: var(--font-data); font-size: 0.68rem; }
+.note { font-size: 0.8rem; color: var(--muted); }
+.ok-box { background: var(--ok-bg); color: var(--ok-ink); border-radius: 6px; padding: 8px 12px; font-size: 0.88rem; }
+.draft { font-family: var(--font-data); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.06em; border: 1px dashed currentColor; border-radius: 3px; padding: 0 4px; margin-left: 6px; opacity: 0.8; white-space: nowrap; }
+.pulse { animation: pulse 1.6s ease-in-out infinite; }
+@keyframes pulse { 50% { box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 30%, transparent); } }
+@media (prefers-reduced-motion: reduce) { .pulse { animation: none; } .ring { transition: none; } }
+.phone-col { display: grid; gap: 8px; justify-items: center; }
+.phone { width: 280px; max-width: 100%; background: var(--phone); border-radius: 36px; padding: 14px; }
+.screen { background: var(--phone-screen); border-radius: 26px; min-height: 480px; padding: 18px 14px; display: grid; align-content: start; gap: 12px; }
+.screen-top { display: flex; justify-content: space-between; font-family: var(--font-data); font-size: 0.75rem; color: var(--muted); }
+.ping { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: grid; gap: 10px; }
+.ping-label { font-family: var(--font-data); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); }
+.ping-what { font-weight: 500; }
+.ring-row { display: flex; align-items: center; gap: 12px; }
+.ring { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; font-family: var(--font-data); font-variant-numeric: tabular-nums; font-weight: 500;
+  background: conic-gradient(var(--accent) calc(var(--p, 1) * 360deg), var(--line) 0); position: relative; }
+.ring::before { content: ""; position: absolute; inset: 6px; border-radius: 50%; background: var(--panel); }
+.ring span { position: relative; }
+.ping-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.empty { text-align: center; color: var(--muted); padding: 40px 8px; font-size: 0.9rem; }
+.msg { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: grid; gap: 6px; }
+.msg strong { font-size: 1rem; }
+.rules { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; display: grid; gap: 10px; }
+.rules h2 { font-size: 0.95rem; margin: 0; }
+.rules-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 640px) { .rules-grid { grid-template-columns: minmax(0, 1fr); } }
+.rules-col { border-radius: 8px; padding: 10px 12px; border: 1px solid var(--line); opacity: 0.55; }
+.rules-col.current { opacity: 1; border-color: var(--accent); }
+.rules-col h3 { margin: 0 0 6px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+.rules-col ul { margin: 0; padding-left: 18px; font-size: 0.88rem; }
+footer { color: var(--muted); font-size: 0.8rem; max-width: 80ch; }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Gone quiet: what Kip and Meteor Mite would see</h1>
+    <p class="sub">A click-through for the brief "No responder goes quiet without anyone knowing". Flip between how Dispatch works today and with the proposed fix, and step through one evening.</p>
+    <div class="tags">
+      <span class="tag">Prototype, not live</span>
+      <span class="tag">Draft wording</span>
+      <span class="tag">Numbers: real Rook data to 6 Sep, unless marked example</span>
+    </div>
+  </header>
+
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Version">
+      <button id="mode-today" type="button" aria-pressed="true">Today</button>
+      <button id="mode-fix" type="button" aria-pressed="false">With the fix</button>
+    </div>
+    <div class="stepper">
+      <button id="back" class="btn" type="button">Back</button>
+      <div class="dots" id="dots" aria-hidden="true"></div>
+      <button id="next" class="btn primary" type="button">Next</button>
+      <button id="restart" class="btn" type="button">Start again</button>
+    </div>
+  </div>
+
+  <section class="story" aria-live="polite">
+    <div class="step-name" id="step-name"></div>
+    <p id="step-text"></p>
+  </section>
+
+  <div class="stage">
+    <section class="console" aria-label="Kip's Rook console">
+      <div class="console-bar"><span><strong>Rook console</strong> &middot; Kip &middot; Eastgate coverage</span><span>Wed 3 Sep, 21:10</span></div>
+      <div class="cards">
+        <article class="card" id="card-mite"></article>
+        <article class="card" id="card-gale"></article>
+      </div>
+    </section>
+
+    <div class="phone-col">
+      <div class="phone" aria-label="Meteor Mite's phone">
+        <div class="screen" id="screen"></div>
+      </div>
+      <div class="note" id="phone-note"></div>
+    </div>
+  </div>
+
+  <section class="rules" aria-label="Rules used in this demo">
+    <h2>Rules behind each version</h2>
+    <div class="rules-grid">
+      <div class="rules-col" id="rules-today">
+        <h3>Today (release 4.2)</h3>
+        <ul>
+          <li>60 seconds to answer a ping</li>
+          <li>Running out of time costs the same as a "no"</li>
+          <li>A responder's place never recovers on its own</li>
+          <li>The handler is never warned</li>
+          <li>Nothing a handler does changes a responder's place</li>
+        </ul>
+      </div>
+      <div class="rules-col" id="rules-fix">
+        <h3>With the fix (all to decide)</h3>
+        <ul>
+          <li>90 seconds to answer a ping</li>
+          <li>Running out of time costs half a "no"</li>
+          <li>Places drift halfway back to the middle in about 2 weeks</li>
+          <li>Handler warned after 3 quiet days while available</li>
+          <li>Handler can put a responder back in the queue once; it is logged</li>
+          <li>The four quiet responders are reset once</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer>Sources: Rook database (pings and callouts, 29 Jun to 6 Sep 2026), routing code, Kip's interview of 4 Sep. Weekly pings and dates are real. The callouts on the phone are real Eastgate callouts from early September, reused as examples. Countdowns run 10 times faster than real time.</footer>
+</div>
+
+<script>
+(function () {
+  var MITE_WEEKS = [11, 12, 10, 11, 12, 11, 10, 4, 2, 1];
+  var WEEK_LABELS = ["29 Jun", "31 Aug"];
+  var STEPS = [
+    { name: "Kip opens the console",
+      today: "It's Wednesday evening. Meteor Mite shows as available, like every night. The card says Mite had 2 pings last week and The Gale had 20, but nothing says why, or whether anything is wrong.",
+      fix: "It's Wednesday evening. Meteor Mite's card now carries a warning: available, but not asked in 5 days. Kip can't miss it." },
+    { name: "Kip wants to know why",
+      today: "There is nothing to click and nothing to read. Kip texts Mite the same line Kip told us about in the interview: hang in there, it'll pick up.",
+      fix: "The warning explains itself in plain words: recent pings ran out of time, and each one moved Mite further down the queue. Kip can see the drop week by week." },
+    { name: "Kip acts",
+      today: "There is no action to take. Today nothing a handler does changes a responder's place in the queue.",
+      fix: "Kip clicks \"Put back in the queue\". Mite's place is restored once, and the console records that Kip did it. (Next does this for you if you don't click.)" },
+    { name: "Mite's phone buzzes",
+      today: "An Eastgate callout comes in. Mite is upstairs. The phone gives Mite 60 seconds.",
+      fix: "An Eastgate callout comes in, because Mite is back near the front of the queue. Mite is upstairs. The phone gives Mite 90 seconds." },
+    { name: "The ping runs out",
+      today: "Mite reaches the phone too late and the ping is simply gone. No message. It counts as a \"no\", so Mite drops further down the queue.",
+      fix: "Mite is still too late this time. But the phone says so honestly, and running out of time costs only half a \"no\", so Mite stays in the running." },
+    { name: "The next ping",
+      today: "The next Eastgate job goes to The Gale instead, who is already the busiest responder in Eastgate. Mite's phone stays silent. Kip still has nothing to tell either of them.",
+      fix: "The next Eastgate job comes to Mite. Take it on the phone. The Gale gets a break, and Kip's two cards tell the same story again." }
+  ];
+
+  var state = { mode: "today", step: 0, requeued: false, timer: null, remaining: 0, total: 0, phase: "idle", taken: false };
+  var el = function (id) { return document.getElementById(id); };
+
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+  function renderDots() {
+    var html = "";
+    for (var i = 0; i < STEPS.length; i++) html += '<span class="dot' + (i === state.step ? " on" : "") + '"></span>';
+    el("dots").innerHTML = html;
+  }
+
+  function renderStory() {
+    var s = STEPS[state.step];
+    el("step-name").textContent = "Step " + (state.step + 1) + " of " + STEPS.length + ": " + s.name;
+    el("step-text").textContent = state.mode === "fix" ? s.fix : s.today;
+    el("back").disabled = state.step === 0;
+    el("next").disabled = state.step === STEPS.length - 1;
+  }
+
+  function miteCard() {
+    var fix = state.mode === "fix";
+    var step = state.step;
+    var html = '<div class="card-head"><div><div class="card-name">Meteor Mite</div><div class="card-meta">Eastgate &middot; handled by Kip</div></div><span class="pill avail">Available</span></div>';
+    if (fix && !state.requeued && step <= 2) {
+      html += '<div class="warn" role="status"><div class="warn-title">Gone quiet: available, but not asked in 5 days<span class="draft">Draft wording</span></div>';
+      if (step >= 1) {
+        var max = Math.max.apply(null, MITE_WEEKS);
+        var bars = MITE_WEEKS.map(function (n) { return '<span style="height:' + Math.round(n / max * 100) + '%" title="' + n + ' pings"></span>'; }).join("");
+        html += '<p>Of Mite\'s last 6 pings, 3 ran out of time and 2 were turned down. Each one moved Mite down the queue, so Mite is now asked last.</p>' +
+          '<div><div class="bars" role="img" aria-label="Pings per week from 29 June to 31 August: ' + MITE_WEEKS.join(", ") + '">' + bars + '</div>' +
+          '<div class="bars-cap"><span>' + WEEK_LABELS[0] + '</span><span>Pings per week</span><span>' + WEEK_LABELS[1] + '</span></div></div>';
+      }
+      if (step >= 2) {
+        html += '<button id="requeue" class="btn primary pulse" type="button">Put back in the queue</button>';
+      }
+      html += '</div>';
+    }
+    if (fix && state.requeued) {
+      var line = step >= 4 && !state.taken ? "Last ping ran out of time. Counted as half a \"no\"; Mite stays in the running." : "Back in the queue. Logged: Kip, Wed 3 Sep 21:12.";
+      if (state.taken) line = "Took an Eastgate callout at 21:31. Mite is back in the rotation.";
+      html += '<div class="ok-box" role="status">' + esc(line) + '<span class="draft">Draft wording</span></div>';
+    }
+    html += '<div class="stat"><span>Pings last week (24&ndash;30 Aug)</span><b>2</b></div>';
+    html += '<div class="stat"><span>Before 4.2, a typical week</span><b>11</b></div>';
+    return html;
+  }
+
+  function galeCard() {
+    var fix = state.mode === "fix";
+    var html = '<div class="card-head"><div><div class="card-name">The Gale</div><div class="card-meta">Eastgate &middot; handled by Kip</div></div><span class="pill busy">' + (fix && state.step === 5 ? "Available" : "On a job") + '</span></div>';
+    if (!fix && state.step === 5) html += '<div class="note">New job assigned 21:31: the Eastgate callout Mite never got.</div>';
+    if (fix && state.step === 5) html += '<div class="ok-box">Eastgate jobs are shared with Meteor Mite again.<span class="draft">Draft wording</span></div>';
+    html += '<div class="stat"><span>Pings last week (24&ndash;30 Aug)</span><b>20</b></div>';
+    html += '<div class="stat"><span>Before 4.2, a typical week</span><b>13</b></div>';
+    return html;
+  }
+
+  var CALLOUT_1 = "A man dressed as a lighthouse is refusing to leave the museum roof.";
+  var CALLOUT_2 = "A woman on stilts has flooded the underpass.";
+
+  function pingCard(what, live) {
+    var t = state.remaining, total = state.total;
+    var shownSecs = Math.ceil(t * 10);
+    var p = total ? t / total : 1;
+    var label = state.mode === "fix" ? "90 seconds" : "60 seconds";
+    return '<div class="ping"><div class="ping-label">New callout &middot; Eastgate &middot; example</div>' +
+      '<div class="ping-what">' + esc(what) + '</div>' +
+      (live ? '<div class="ring-row"><div class="ring" style="--p:' + p.toFixed(3) + '"><span>' + shownSecs + 's</span></div><div class="note">' + label + ' to answer.<br>Shown 10x faster.</div></div>' : '') +
+      '<div class="ping-actions"><button class="btn primary" type="button" id="take"' + (live ? "" : " disabled") + '>Take it</button><button class="btn" type="button" id="decline"' + (live ? "" : " disabled") + '>Turn down</button></div></div>';
+  }
+
+  function renderPhone() {
+    var fix = state.mode === "fix";
+    var step = state.step;
+    var html = '<div class="screen-top"><span>Meteor Mite</span><span>21:' + (step >= 5 ? "31" : step >= 3 ? "14" : "10") + '</span></div>';
+    var note = "";
+    if (step <= 2) {
+      html += '<div class="empty">No callouts.<br>Last ping: Fri 29 Aug.</div>';
+    } else if (step === 3) {
+      html += pingCard(CALLOUT_1, state.phase === "ringing");
+      note = state.phase === "ringing" ? '<button class="btn" type="button" id="skip">Skip to the end of the countdown</button>' : "";
+      if (state.phase === "ringing") note = "Mite is on the stairs. " + note;
+    } else if (step === 4) {
+      if (fix) {
+        html += '<div class="msg"><strong>This one moved on. You\'re still on the list.</strong><span class="note">We gave it to the next responder after 90 seconds. Running out of time doesn\'t take you off the list.<span class="draft">Draft wording</span></span></div>';
+      } else {
+        html += '<div class="empty">Nothing here.<br>The callout disappeared without a message.</div>';
+      }
+    } else if (step === 5) {
+      if (fix) {
+        if (state.taken) {
+          html += '<div class="msg"><strong>It\'s yours.</strong><span>' + esc(CALLOUT_2) + '</span><span class="note">Kip can see you took it.<span class="draft">Draft wording</span></span></div>';
+        } else {
+          html += pingCard(CALLOUT_2, true);
+          note = "Tap Take it.";
+        }
+      } else {
+        html += '<div class="empty">No callouts.<br>Mite won\'t be asked again until Fri 5 Sep, in real life.</div>';
+      }
+    }
+    el("screen").innerHTML = html;
+    el("phone-note").innerHTML = note;
+    var take = el("take"), decline = el("decline"), skip = el("skip");
+    if (take && step === 5) take.onclick = function () { state.taken = true; render(); };
+    if (take && step === 3) take.onclick = function () { el("phone-note").textContent = "In this story Mite doesn't reach the phone in time."; };
+    if (decline) decline.onclick = function () { el("phone-note").textContent = "In this story Mite wants the job but is too late."; };
+    if (skip) skip.onclick = function () { finishCountdown(); };
+  }
+
+  function renderRules() {
+    el("rules-today").classList.toggle("current", state.mode === "today");
+    el("rules-fix").classList.toggle("current", state.mode === "fix");
+  }
+
+  function render() {
+    el("mode-today").setAttribute("aria-pressed", String(state.mode === "today"));
+    el("mode-fix").setAttribute("aria-pressed", String(state.mode === "fix"));
+    renderDots(); renderStory();
+    el("card-mite").innerHTML = miteCard();
+    el("card-gale").innerHTML = galeCard();
+    renderPhone(); renderRules();
+    var rq = el("requeue");
+    if (rq) rq.onclick = function () { state.requeued = true; render(); };
+  }
+
+  function stopTimer() { if (state.timer) { clearInterval(state.timer); state.timer = null; } }
+
+  function startCountdown() {
+    stopTimer();
+    state.total = state.mode === "fix" ? 9 : 6;
+    state.remaining = state.total;
+    state.phase = "ringing";
+    var last = Date.now();
+    state.timer = setInterval(function () {
+      var now = Date.now();
+      state.remaining = Math.max(0, state.remaining - (now - last) / 1000);
+      last = now;
+      if (state.remaining <= 0) { finishCountdown(); } else { renderPhone(); }
+    }, 100);
+  }
+
+  function finishCountdown() {
+    stopTimer();
+    state.phase = "done";
+    if (state.step === 3) { state.step = 4; }
+    render();
+  }
+
+  function goTo(step) {
+    stopTimer();
+    state.step = Math.max(0, Math.min(STEPS.length - 1, step));
+    if (state.step <= 2) { state.requeued = false; }
+    if (state.mode === "fix" && state.step >= 3) state.requeued = true;
+    if (state.step < 5) state.taken = false;
+    state.phase = "idle";
+    if (state.step === 3) startCountdown();
+    render();
+  }
+
+  el("next").onclick = function () {
+    if (state.mode === "fix" && state.step === 2 && !state.requeued) { state.requeued = true; render(); return; }
+    goTo(state.step + 1);
+  };
+  el("back").onclick = function () { goTo(state.step - 1); };
+  el("restart").onclick = function () { goTo(0); };
+  el("mode-today").onclick = function () { state.mode = "today"; goTo(state.step); };
+  el("mode-fix").onclick = function () { state.mode = "fix"; goTo(state.step); };
+  render();
+})();
+</script>

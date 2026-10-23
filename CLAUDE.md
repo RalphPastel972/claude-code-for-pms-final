@@ -107,6 +107,17 @@ Cautions: "the other 12 get their far-away work back" is a prediction to check
 after any change, and whether a miss should count like a "no" is a policy
 call, not a bug fix.
 
+### Reference prototypes
+- Mine: "Gone Quiet Prototype" (private), https://claude.ai/artifact/9gmqGBSYEVz5NWbbkQW9qd, file `05-super-speed/prototype.html`.
+- A colleague's: "The Quiet Responder" (v2), https://claude.ai/artifact/PPRL62aqpZuG7UXrTus91w
+  (made outside my org; treat as someone else's work). Ideas worth comparing with mine:
+  - The responder gets a check-in with three replies, one of them "Pause offers for a week".
+  - The warning triggers after 3 days with no offers, OR when offers fall below a quarter of the
+    usual weekly rate over 7 days, and shows at most once a week.
+  - It's hidden if the responder is unavailable or paused; dismissing it doesn't close the case.
+  - It uses no location data.
+  - Its own open gaps: who owns "we're looking into why" (and by when); the way back; stop rules.
+
 ### My to-dos
 - Analyse the concept of "home base" and its impact before and after 4.2.
   The term doesn't appear in the course files yet; check the wiki Glossary.
@@ -146,3 +157,8 @@ call, not a bug fix.
 - The September interviews back the data: Vesper runs downstairs and loses the "race"; Captain Vantage had "one boot on"; Kip says Meteor Mite is dead quiet while The Gale is "exhausted" (The Gale went from 13 to 19 pings a week). Neighbours now cover the four's areas (59% taken, against 0 of 186 out-of-area pings before 4.2), even though the Glossary says covering other areas ("mutual aid") isn't supported yet (Q4). The other 12 still miss about 6% at home (it was 0.6%), steady since 4.2.
 - The Dispatch wiki page defines a "time-to-accept" metric, so answer times probably exist somewhere. Ask the EM for them per responder, plus the push delay to the phone, and whether there was an unwritten reason for 60s (ask the EM, the staff engineer, or Priya via the EM).
 - Draft developer asks: make a miss cost less than a "no"; let scores drift back over time; ping wait back to 90s or in between; start the clock on delivery; alert the handler when an available responder goes quiet or their score drops low; show handlers why; save scores durably; log time-to-answer; reset the four once. Optional stopgap: raise the score floor in `config.py` (e.g. 0.3).
+- Module 2 (interviews vs tickets): the two piles cover mostly different responders. Vesper, Meteor Mite, The Gale and Sgt. Bulwark (all four interviewees' responders except Captain Vantage) have 0 tickets; Captain Vantage has 1. Tickets miss the quietest sufferers and anyone overloaded; interviews miss the scale and urgency. Only the ping data covers all 16.
+- Ticket themes (147 tickets, 40 before / 107 after 4.2): 57 of the 107 are the three 4.2 themes. Gone quiet: 30 tickets, 4 responders. Ping gone before answering: 15 tickets, 11 of 16 responders, the widest reach. Saved-filter bugs: 12 tickets, 10 responders, not blocking. The old console/Supply backlog kept arriving at the same rate. 4.2's small fixes (duplicate notifications, tag order, export time zone) stopped those complaints.
+- Already there before 4.2, not caused by it: dark mode, small status badges, same alert sound, hard-to-find tag legend, Supply request priority ignored, no replies to field failure reports, poor catalog search.
+- The interviews were console-redesign research, yet 3 of 4 handlers raised disappearing pings unprompted. Handlers play it down in conversation ("didn't think much of it"), while tickets escalate ("starting to wonder if im still even in the system"). Nobody in any source speaks for the public, who bear the unfilled callouts (5% → 11%).
+- Open: Halloran praised maintenance scheduling, but four post-4.2 tickets say it booked servicing on marathon day or sent reminders late; check whether that's linked to 4.2. Next idea: use the ping data to find other responders whose handlers never file tickets.
