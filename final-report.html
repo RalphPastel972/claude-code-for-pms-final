@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Release 4.2 Final Report</title>
+<style>
+:root{
+  --bg:#f6f4ef; --surface:#ffffff; --ink:#1d1f24; --muted:#5f6470; --line:#dedad0;
+  --accent:#d9480f; --accent-soft:#fde7dc; --good:#2b8a3e; --good-soft:#dff3e3;
+  --blue:#1c64b8; --blue-soft:#e1ecfa; --warn:#b7791f; --warn-soft:#fbf0d9;
+  --code-bg:#1f2330; --code-ink:#e8e6df;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#15171c; --surface:#1e2128; --ink:#ecebe6; --muted:#a3a7b1; --line:#30343d;
+    --accent:#ff7a3d; --accent-soft:#3a2219; --good:#5cc274; --good-soft:#1b3022;
+    --blue:#6ea8ff; --blue-soft:#1b2a40; --warn:#e8b14f; --warn-soft:#3a2f17;
+    --code-bg:#0f1116; --code-ink:#e8e6df;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#15171c; --surface:#1e2128; --ink:#ecebe6; --muted:#a3a7b1; --line:#30343d;
+  --accent:#ff7a3d; --accent-soft:#3a2219; --good:#5cc274; --good-soft:#1b3022;
+  --blue:#6ea8ff; --blue-soft:#1b2a40; --warn:#e8b14f; --warn-soft:#3a2f17;
+  --code-bg:#0f1116; --code-ink:#e8e6df;
+}
+*{box-sizing:border-box}
+html{scroll-snap-type:y proximity;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif}
+.slide{min-height:100vh;scroll-snap-align:start;display:flex;align-items:center;padding:64px 16px;border-bottom:1px solid var(--line)}
+.wrap{max-width:1080px;width:100%;margin:0 auto}
+.kicker{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:700;margin:0 0 10px}
+h1{font-size:clamp(34px,6vw,64px);line-height:1.05;margin:0 0 20px;letter-spacing:-.02em}
+h2{font-size:clamp(26px,4vw,40px);line-height:1.15;margin:0 0 16px;letter-spacing:-.01em}
+h3{font-size:18px;margin:0 0 8px}
+p{margin:0 0 14px}
+.lede{font-size:clamp(18px,2.2vw,22px);color:var(--muted);max-width:780px}
+.grid{display:grid;gap:20px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px}
+.stat{font-size:clamp(40px,6vw,64px);font-weight:800;line-height:1;letter-spacing:-.03em}
+.stat small{font-size:.4em;font-weight:600;color:var(--muted);letter-spacing:0}
+.muted{color:var(--muted)}
+.accent{color:var(--accent)} .good{color:var(--good)}
+.pill{display:inline-block;padding:3px 10px;border-radius:99px;font-size:13px;font-weight:600}
+.pill.bad{background:var(--accent-soft);color:var(--accent)}
+.pill.ok{background:var(--good-soft);color:var(--good)}
+.pill.mid{background:var(--warn-soft);color:var(--warn)}
+/* prompt bubble */
+.prompt{background:var(--blue-soft);border-left:4px solid var(--blue);border-radius:10px;padding:14px 16px;margin:16px 0;font-size:15px;white-space:pre-wrap}
+.prompt .who{display:block;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+.module-tag{display:inline-flex;gap:8px;align-items:center;font-weight:700;font-size:14px;margin-bottom:14px}
+.module-tag b{background:var(--ink);color:var(--bg);border-radius:6px;padding:2px 8px}
+/* timeline */
+.timeline{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:26px 0}
+.timeline:before{content:"";position:absolute;left:0;right:0;top:11px;height:3px;background:var(--line)}
+.tl{position:relative;padding-top:30px}
+.tl:before{content:"";position:absolute;top:2px;left:0;width:20px;height:20px;border-radius:50%;background:var(--surface);border:4px solid var(--accent)}
+.tl.grey:before{border-color:var(--muted)}
+.tl b{display:block;font-size:15px}
+.tl span{font-size:14px;color:var(--muted)}
+/* dots */
+.dots{display:grid;grid-template-columns:repeat(22,1fr);gap:4px;max-width:360px}
+.dots i{aspect-ratio:1;border-radius:50%;background:var(--line)}
+.dots i.miss{background:var(--accent)}
+/* code */
+pre{background:var(--code-bg);color:var(--code-ink);border-radius:12px;padding:16px;overflow-x:auto;font:13.5px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;margin:0}
+pre .c{color:#8b93a7} pre .hl{background:rgba(255,122,61,.22);display:inline-block;width:100%} pre .hg{background:rgba(92,194,116,.22);display:inline-block;width:100%}
+/* table */
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+/* nav */
+nav.dotsnav{position:fixed;right:14px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px;z-index:5}
+nav.dotsnav a{width:10px;height:10px;border-radius:50%;background:var(--line);display:block}
+nav.dotsnav a.on{background:var(--accent)}
+@media (max-width:640px){nav.dotsnav{display:none}.timeline{grid-template-columns:1fr 1fr}.timeline:before{display:none}}
+.frame{width:100%;height:760px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+.toggle{position:fixed;top:12px;right:14px;z-index:6;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:99px;padding:6px 12px;font-size:13px;cursor:pointer}
+svg text{fill:var(--ink);font-family:inherit}
+.check{display:flex;gap:12px;align-items:flex-start}
+.check .n{flex:none;width:30px;height:30px;border-radius:8px;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-weight:800}
+a{color:var(--blue)}
+.small{font-size:14px}
+</style>
+</head>
+<body>
+<button class="toggle" id="themeBtn" aria-label="Switch light or dark theme">◐ Theme</button>
+<nav class="dotsnav" id="dotsnav" aria-label="Slides"></nav>
+
+<!-- 0. Title -->
+<section class="slide" id="s-title">
+  <div class="wrap">
+    <p class="kicker">Rook Dispatch · Final report · Claude Code for PMs</p>
+    <h1>Release 4.2 took 30 seconds away, and four responders quietly vanished.</h1>
+    <p class="lede">4.2 cut the time a responder has to answer a ping from 90 to 60 seconds. The routing code treats a missed ping the same as a "no", and never forgives either. Four responders sank to the bottom of the queue and their phones stopped ringing. Nobody noticed, because their handlers don't file tickets.</p>
+    <div class="grid g3" style="margin-top:34px">
+      <div class="card"><div class="stat accent">1 in 6</div><p class="muted small">pings now run out of time<br>(was 1 in 44)</p></div>
+      <div class="card"><div class="stat">4<small> of 16</small></div><p class="muted small">responders went quiet: Vesper, Farlight, The Undertow, Meteor Mite</p></div>
+      <div class="card"><div class="stat">0</div><p class="muted small">tickets from the handlers of Vesper or Meteor Mite</p></div>
+    </div>
+    <p class="muted small" style="margin-top:28px">Each slide pairs one finding with the exact prompt I typed to get it. Scroll, or use ↓ / ↑.</p>
+  </div>
+</section>
+
+<!-- 1. The loop -->
+<section class="slide" id="s-loop">
+  <div class="wrap">
+    <p class="kicker">What happened, in one picture</p>
+    <h2>A trap with a door that only opens from the inside</h2>
+    <p class="lede">The only way back up the queue is to take a job, but people at the bottom are rarely offered one.</p>
+    <svg viewBox="0 0 900 380" width="100%" role="img" aria-label="Feedback loop: shorter wait, more misses, score drops, fewer pings, no way back">
+      <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/></marker></defs>
+      <g font-size="15">
+        <rect x="20" y="150" width="190" height="80" rx="14" fill="var(--accent-soft)" stroke="var(--accent)"/>
+        <text x="115" y="183" text-anchor="middle" font-weight="700">Wait cut</text>
+        <text x="115" y="205" text-anchor="middle">90s → 60s</text>
+
+        <rect x="300" y="30" width="230" height="80" rx="14" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="415" y="63" text-anchor="middle" font-weight="700">More pings run out</text>
+        <text x="415" y="85" text-anchor="middle">2.3% → 18%</text>
+
+        <rect x="640" y="150" width="240" height="80" rx="14" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="760" y="183" text-anchor="middle" font-weight="700">Each miss = a "no"</text>
+        <text x="760" y="205" text-anchor="middle">score −0.12, no recovery</text>
+
+        <rect x="300" y="270" width="230" height="80" rx="14" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="415" y="303" text-anchor="middle" font-weight="700">Pushed down the queue</text>
+        <text x="415" y="325" text-anchor="middle">phone almost stops ringing</text>
+
+        <path d="M210,175 C250,120 260,90 298,75" fill="none" stroke="var(--accent)" stroke-width="3" marker-end="url(#ar)"/>
+        <path d="M532,75 C600,90 640,120 690,148" fill="none" stroke="var(--accent)" stroke-width="3" marker-end="url(#ar)"/>
+        <path d="M720,232 C680,290 600,305 534,308" fill="none" stroke="var(--accent)" stroke-width="3" marker-end="url(#ar)"/>
+        <path d="M300,300 C200,300 140,280 120,234" fill="none" stroke="var(--accent)" stroke-width="3" stroke-dasharray="6 6" marker-end="url(#ar)"/>
+        <text x="150" y="320" text-anchor="middle" class="muted" font-size="13">only a "yes" lifts you,</text>
+        <text x="150" y="338" text-anchor="middle" font-size="13">and you're rarely asked</text>
+      </g>
+    </svg>
+  </div>
+</section>
+
+<!-- 2. Module 1 -->
+<section class="slide" id="s-m1">
+  <div class="wrap">
+    <div class="module-tag"><b>Module 1</b> Origin story</div>
+    <h2>It broke on release day. We noticed six days later, then blamed August.</h2>
+    <div class="timeline">
+      <div class="tl"><b>12 Aug</b><span>4.2 ships. Pings taken fall from about 76% to about 45% that week. Misses go from about 2% to 20–30%.</span></div>
+      <div class="tl"><b>13–14 Aug</b><span>Tickets triple. The EM asks on the wiki if proximity also hits responders who keep saying no. Nobody answers.</span></div>
+      <div class="tl"><b>18 Aug</b><span>The support lead flags it. Nobody pulls real numbers.</span></div>
+      <div class="tl grey"><b>21 Aug</b><span>Priya leaves: "August is always soft". It's pushed to September.</span></div>
+    </div>
+    <div class="prompt"><span class="who">The prompt I wrote</span>do we know how long after the release of 4.2 we noticed the drop in quality?</div>
+    <p class="muted small">Source: <code>pings</code> and <code>support_tickets</code> tables, wiki 4.2 release page comments, Priya's handoff note.</p>
+  </div>
+</section>
+
+<!-- 3. Module 2 -->
+<section class="slide" id="s-m2">
+  <div class="wrap">
+    <div class="module-tag"><b>Module 2</b> Super hearing</div>
+    <h2>The people hurt most were the ones nobody was hearing</h2>
+    <div class="grid g2" style="align-items:start">
+      <div class="card">
+        <h3>Tickets (147)</h3>
+        <p class="muted small">Loud, frequent, escalating. "starting to wonder if im still even in the system"</p>
+        <table>
+          <tr><th>Responder</th><th>Tickets</th></tr>
+          <tr><td>Vesper</td><td><span class="pill bad">0</span></td></tr>
+          <tr><td>Meteor Mite</td><td><span class="pill bad">0</span></td></tr>
+          <tr><td>The Gale (overloaded)</td><td><span class="pill bad">0</span></td></tr>
+          <tr><td>Sgt. Bulwark</td><td><span class="pill bad">0</span></td></tr>
+          <tr><td>Corporal Ashgrove, Halfmoon</td><td><span class="pill mid">many, for a 20–25% drop</span></td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <h3>Interviews (4)</h3>
+        <p class="muted small">This was console-redesign research, yet 3 of 4 handlers raised disappearing pings without being asked, and played it down ("didn't think much of it").</p>
+        <p><b>Tickets miss</b> the quietest sufferers and anyone overloaded.<br><b>Interviews miss</b> the scale and urgency.<br><b class="accent">Only the ping data covers all 16.</b></p>
+      </div>
+    </div>
+    <div class="prompt"><span class="who">The prompt I wrote</span>You've now read both piles. Where do they disagree? What's loud in the interviews but rare in the tickets, and what's all over the tickets that nobody brought up in the interviews?</div>
+  </div>
+</section>
+
+<!-- 4. Module 3 -->
+<section class="slide" id="s-m3">
+  <div class="wrap">
+    <div class="module-tag"><b>Module 3</b> Rewind</div>
+    <h2>The one number for the Director: 1 ping in 6 now runs out</h2>
+    <div class="grid g2" style="align-items:center">
+      <div class="card">
+        <p class="small muted" style="margin-bottom:8px">Before 4.2: 25 of 1,085 pings missed (2.3%)</p>
+        <div class="dots" id="dotsBefore" aria-label="44 pings, 1 missed"></div>
+        <p class="small muted" style="margin:18px 0 8px">Since 4.2: 110 of 611 pings missed (18.0%)</p>
+        <div class="dots" id="dotsAfter" aria-label="44 pings, 8 missed"></div>
+        <p class="small muted" style="margin-top:10px">Each dot is a ping. Orange ones ran out of time. Still about 13% in the last week.</p>
+      </div>
+      <div>
+        <p>It hit <b>all 16 responders</b>. The apparent recovery in pings taken (back to about 73%) mostly comes from the four quiet responders dropping out of the average.</p>
+        <div class="prompt"><span class="who">The prompt I wrote</span>If the Director of Product asked tomorrow what Release 4.2 actually did to responders, what's the one number you'd put in front of her?</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. Module 4 -->
+<section class="slide" id="s-m4">
+  <div class="wrap">
+    <div class="module-tag"><b>Module 4</b> X-ray vision</div>
+    <h2>In the code, a miss costs as much as a "no", and nothing gives it back</h2>
+    <div class="grid g2" style="align-items:start">
+      <div>
+        <p class="small muted" style="margin-bottom:6px"><code>config.py</code></p>
+<pre><span class="hl">OFFER_TIMEOUT_SECONDS = 60     <span class="c"># was 90 until 4.2</span></span>
+WEIGHT_PROXIMITY = 0.60        <span class="c"># was 0.45 until 4.2</span>
+WEIGHT_RECENT_ACCEPTANCE = 0.25 <span class="c"># was 0.40 until 4.2</span></pre>
+        <p class="small muted" style="margin:14px 0 6px"><code>history.py</code></p>
+<pre><span class="hg">def record_accepted(responder):
+    _set(responder, recent_acceptance(responder) + ACCEPTANCE_CREDIT)</span>
+
+<span class="c"># TODO(2019): should this ease back toward NEUTRAL_SCORE on its
+# own after a while? ... Leaving it as-is for now.</span>
+def record_declined(responder):
+    <span class="c">"""They turned it down, or we ran out of time waiting. ...
+    Same either way — we asked and we didn't get a yes."""</span>
+<span class="hl">    _set(responder, recent_acceptance(responder) - DECLINE_PENALTY)</span></pre>
+      </div>
+      <div>
+        <div class="grid g2">
+          <div class="card"><div class="stat accent">−0.12</div><p class="small muted">for a "no" <b>or</b> a miss</p></div>
+          <div class="card"><div class="stat good">+0.08</div><p class="small muted">for taking a job. The <b>only</b> way up</p></div>
+        </div>
+        <p style="margin-top:16px">Replaying that rule takes the four from about 0.9 on 12 Aug to <b>0</b> by the end of August. No written reason for 60s exists anywhere. Callouts now take longer to fill (21s → 32s), and the own-area responder is asked first for 61% of callouts, down from 80%.</p>
+        <div class="prompt"><span class="who">The prompt I wrote</span>Find me the part of this code that takes points off somebody when they miss a ping or turn one down. Show it to me and explain it in plain English. Then find me every single thing in this code that puts points back on.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. Module 5: the person -->
+<section class="slide" id="s-m5a">
+  <div class="wrap">
+    <div class="module-tag"><b>Module 5</b> Super speed</div>
+    <h2>From the point of view of the person it happens to</h2>
+    <p class="lede">Kip looks after Meteor Mite and The Gale, who both cover Eastgate. Kip says Mite "thinks Mite's been forgotten", and The Gale is "exhausted".</p>
+    <div class="card">
+      <svg id="miteChart" viewBox="0 0 900 300" width="100%" role="img" aria-label="Meteor Mite pings per week, about 11 before 4.2, falling to 1"></svg>
+      <p class="small muted" style="margin:6px 0 0">Meteor Mite: pings per week, weeks starting 29 Jun to 31 Aug. Misses went from 3% to 57%. Over the same weeks The Gale went from about 13 to about 21 a week.</p>
+    </div>
+    <div class="prompt"><span class="who">The prompt I wrote</span>yes draft the brief for me. I want a version that is simple to read and understand for someone not super familiar with the subject. Add the key data. Keep it short.</div>
+  </div>
+</section>
+
+<!-- 7. Module 5: the fix -->
+<section class="slide" id="s-m5b">
+  <div class="wrap">
+    <div class="module-tag"><b>Module 5</b> The fix, as a click-through</div>
+    <h2>Not a setting we quietly flip: something Kip would notice</h2>
+    <div class="grid g3" style="margin-bottom:20px">
+      <div class="card"><h3>1 · "Gone quiet" warning</h3><p class="small muted">Kip sees it on the console with the reason in plain words: "5 of the last 6 pings ran out of time."</p></div>
+      <div class="card"><h3>2 · Put back in the queue</h3><p class="small muted">New: Kip can restore the responder's place once, and it's logged.</p></div>
+      <div class="card"><h3>3 · An honest phone</h3><p class="small muted">"This one moved on. You're still on the list." Ships only with the rule changes, or it wouldn't be true.</p></div>
+    </div>
+    <iframe class="frame" src="05-super-speed/prototype.html" title="Gone Quiet prototype"></iframe>
+    <p class="small muted" style="margin-top:8px">The live prototype (<code>05-super-speed/prototype.html</code>). Flip "Today / With the fix" to compare. If it doesn't load here, open the file directly or the private <a href="https://claude.ai/artifact/9gmqGBSYEVz5NWbbkQW9qd">Gone Quiet Prototype</a> link.</p>
+    <div class="prompt"><span class="who">The prompt I wrote</span>no need to rename anything. it is clear now.
+
+Ok, build the prototype</div>
+    <p class="small muted">Helen still decides: reset the four now, 90s or in between, what a miss should cost, slow recovery over time, and when to warn the handler. Proximity is not being reverted.</p>
+  </div>
+</section>
+
+<!-- 8. The skill -->
+<section class="slide" id="s-skill">
+  <div class="wrap">
+    <div class="module-tag"><b>Module 5</b> Keeping it from happening again</div>
+    <h2>4.2 was built exactly as briefed. The briefs were the problem.</h2>
+    <p class="lede">Both 4.2 routing briefs were one line, with no owner, no target and no evidence. So I built <b>review-checklist</b>, a skill that reads any brief before it ships and checks four things:</p>
+    <div class="grid g2" style="margin:20px 0">
+      <div class="card check"><div class="n">1</div><div><h3>Names who owns it</h3><p class="small muted">The 60s change had no owner and no written reason.</p></div></div>
+      <div class="card check"><div class="n">2</div><div><h3>Says how we'll know it worked</h3><p class="small muted">A target would have made the day-one jump in misses hard to put down to August.</p></div></div>
+      <div class="card check"><div class="n">3</div><div><h3>Keeps the same scope start to finish</h3><p class="small muted">Proximity was the ask. The timeout came along for the ride.</p></div></div>
+      <div class="card check"><div class="n">4</div><div><h3>Explains the problem before the fix</h3><p class="small muted">No ticket before 4.2 complained about the 90-second wait.</p></div></div>
+    </div>
+    <div class="prompt"><span class="who">The prompt I wrote</span>Make a skill called review-checklist. When I point it at a brief, it checks that the brief: names who owns it, says how we'll know it worked, keeps the same scope start to finish, and explains the problem before the fix.</div>
+  </div>
+</section>
+
+<!-- 9. Skill in action -->
+<section class="slide" id="s-skill2">
+  <div class="wrap">
+    <p class="kicker">The skill, tested on my own brief</p>
+    <h2>It caught what three reviewers missed</h2>
+    <div class="grid g2" style="align-items:start">
+      <div class="card">
+        <p><b>Verdict:</b> ready after small fixes.</p>
+        <table>
+          <tr><th>Check</th><th>Result</th></tr>
+          <tr><td>Names who owns it<br><span class="small muted">"Draft for Helen" names the reader, not the owner</span></td><td><span class="pill mid">Partial</span></td></tr>
+          <tr><td>How we'll know it worked<br><span class="small muted">"Near 2%" has no date, "X days" is undefined</span></td><td><span class="pill mid">Partial</span></td></tr>
+          <tr><td>Same scope start to finish<br><span class="small muted">The 32s fill time isn't in the problem table</span></td><td><span class="pill mid">Partial</span></td></tr>
+          <tr><td>Problem before the fix</td><td><span class="pill ok">Pass</span></td></tr>
+        </table>
+      </div>
+      <div>
+        <div class="card" style="display:flex;gap:16px;align-items:center">
+          <svg viewBox="0 0 90 96" width="80" aria-hidden="true"><rect x="3" y="12" width="84" height="80" rx="10" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/><rect x="3" y="12" width="84" height="24" rx="10" fill="var(--accent)"/><rect x="3" y="26" width="84" height="10" fill="var(--accent)"/><text x="45" y="30" text-anchor="middle" font-size="13" font-weight="700" style="fill:#fff">MON</text><text x="45" y="76" text-anchor="middle" font-size="30" font-weight="800">8:00</text></svg>
+          <div><h3>A habit, not a one-off</h3><p class="small muted" style="margin:0">Every Monday at about 8 am, the skill re-reads every brief in the repo, read-only, and reports what's missing.</p></div>
+        </div>
+        <div class="prompt"><span class="who">The prompt I wrote</span>Schedule review-checklist to run every Monday morning, and let me know what it finds. Nothing needs to be ready for it to fire today. I'm setting the habit, not waiting on the result.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10. Module 6 + close -->
+<section class="slide" id="s-end">
+  <div class="wrap">
+    <div class="module-tag"><b>Module 6</b> Sidekicks</div>
+    <h2>This report is the Module 6 artifact</h2>
+    <p class="lede">Module 6's prompts file is still empty. This page was built from the prompt below, using CLAUDE.md and the prompt library from Modules 1 to 5: 44 prompts I wrote myself.</p>
+    <div class="prompt"><span class="who">The prompt I wrote</span>Read CLAUDE.md and all six prompts.md files in this repo. For each module, pull one real finding or artifact and the exact prompt I wrote that produced it. Build a single HTML presentation that says plainly what happened with Release 4.2, backs it up with those findings and prompts, shows the fix through my prototype, and explains how my skill keeps it from happening again. Make it visually engaging, not just text. Save it as final-report.html, then save my work.</div>
+    <div class="grid g3" style="margin-top:24px">
+      <div class="card"><h3>Still to confirm</h3><p class="small muted">Answer-time logs per responder, how long a ping takes to reach the phone, and whether a restart wipes scores (Marcus, Wen).</p></div>
+      <div class="card"><h3>Still to fix</h3><p class="small muted">The brief's three Partials. Then a v2 that also tells the responder, not only the handler.</p></div>
+      <div class="card"><h3>Still unheard</h3><p class="small muted">Meteor Mite directly, and the public, who now see 11% of callouts go unfilled (was 5%).</p></div>
+    </div>
+    <p class="small muted" style="margin-top:24px">Rook Industries is a fictional company from Product School's "Claude Code for PMs" course. Sources: Rook database (pings, tickets), routing code, wiki, September interviews.</p>
+  </div>
+</section>
+
+<script>
+// theme toggle
+(function(){
+  var btn=document.getElementById('themeBtn'), root=document.documentElement;
+  try{var t=localStorage.getItem('theme'); if(t) root.setAttribute('data-theme',t);}catch(e){}
+  btn.addEventListener('click',function(){
+    var cur=root.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+    var next=cur==='dark'?'light':'dark'; root.setAttribute('data-theme',next);
+    try{localStorage.setItem('theme',next);}catch(e){}
+  });
+})();
+
+// dot grids: 44 pings, 1 vs 8 missed (1 in 44 vs about 1 in 6)
+function dots(id,missIdx){var el=document.getElementById(id);for(var i=0;i<44;i++){var d=document.createElement('i');if(missIdx.indexOf(i)>-1)d.className='miss';el.appendChild(d);}}
+dots('dotsBefore',[30]);
+dots('dotsAfter',[3,9,14,20,26,31,37,42]);
+
+// Meteor Mite weekly chart
+(function(){
+  var data=[11,12,10,11,12,11,10,4,2,1];
+  var labels=['29 Jun','6 Jul','13 Jul','20 Jul','27 Jul','3 Aug','10 Aug','17 Aug','24 Aug','31 Aug'];
+  var svg=document.getElementById('miteChart'), ns='http://www.w3.org/2000/svg';
+  var W=900,H=300,L=40,B=40,T=20, bw=60, gap=(W-L-20-bw*10)/9, max=14;
+  function el(n,a){var e=document.createElementNS(ns,n);for(var k in a)e.setAttribute(k,a[k]);svg.appendChild(e);return e;}
+  [0,5,10].forEach(function(v){var y=H-B-(v/max)*(H-B-T);el('line',{x1:L,x2:W-10,y1:y,y2:y,stroke:'var(--line)'});var t=el('text',{x:L-8,y:y+4,'text-anchor':'end','font-size':12});t.textContent=v;});
+  data.forEach(function(v,i){
+    var x=L+10+i*(bw+gap), h=(v/max)*(H-B-T), y=H-B-h;
+    el('rect',{x:x,y:y,width:bw,height:h,rx:6,fill:i>=7?'var(--accent)':'var(--muted)',opacity:i>=7?1:.55});
+    var t=el('text',{x:x+bw/2,y:y-6,'text-anchor':'middle','font-size':14,'font-weight':700});t.textContent=v;
+    var l=el('text',{x:x+bw/2,y:H-B+18,'text-anchor':'middle','font-size':12});l.textContent=labels[i];
+  });
+  var rx=L+10+6*(bw+gap)+bw*0.4;
+  el('line',{x1:rx,x2:rx,y1:T,y2:H-B,stroke:'var(--accent)','stroke-width':2,'stroke-dasharray':'5 5'});
+  var rt=el('text',{x:rx+6,y:T+12,'font-size':13,'font-weight':700});rt.textContent='4.2 ships · 12 Aug';
+})();
+
+// side navigation
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide')), nav=document.getElementById('dotsnav');
+  slides.forEach(function(s){var a=document.createElement('a');a.href='#'+s.id;a.setAttribute('aria-label',s.querySelector('h1,h2').textContent);nav.appendChild(a);});
+  var links=nav.querySelectorAll('a');
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){var i=slides.indexOf(e.target);links.forEach(function(l,j){l.classList.toggle('on',i===j);});}});},{threshold:.5});
+  slides.forEach(function(s){io.observe(s);});
+  document.addEventListener('keydown',function(e){
+    if(e.target.tagName==='IFRAME')return;
+    var cur=slides.findIndex(function(s){var r=s.getBoundingClientRect();return r.top>-innerHeight/2&&r.top<innerHeight/2;});
+    if(cur<0)return;
+    if(e.key==='ArrowDown'||e.key==='PageDown'){e.preventDefault();(slides[cur+1]||slides[cur]).scrollIntoView();}
+    if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();(slides[cur-1]||slides[cur]).scrollIntoView();}
+  });
+})();
+</script>
+</body>
+</html>
