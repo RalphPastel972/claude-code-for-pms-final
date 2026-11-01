@@ -4,7 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Release 4.2 Final Report</title>
-<meta name="description" content="What Release 4.2 did to Rook Dispatch responders, how each course module found it, the proposed fix, and the weekly brief checklist that keeps it from happening again.">
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="What Release 4.2 did to Rook Dispatch responders, the evidence behind it, the proposed fix, and why it shipped this way.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
@@ -131,8 +132,6 @@ strong { font-weight: 600; }
   color: var(--muted); display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; margin: 0;
 }
 .eyebrow b { color: var(--accent); font-weight: 500; }
-.module-chip { display: inline-flex; align-items: center; gap: 8px; color: var(--ink); }
-.module-chip span { font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; letter-spacing: 0.02em; background: var(--ink); color: var(--bg); border-radius: 4px; padding: 0 7px; }
 h1, h2 { font-family: var(--font-display); font-weight: 600; letter-spacing: -0.012em; text-wrap: balance; margin: 0; }
 h1 { font-size: clamp(2.5rem, 5.6vw, 4.6rem); line-height: 1.02; }
 h2 { font-size: clamp(1.9rem, 3.6vw, 3rem); line-height: 1.06; max-width: 24ch; }
@@ -151,18 +150,6 @@ p { margin: 0; }
 .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px; min-width: 0; }
 .slide:nth-of-type(even) .card { background: var(--panel); }
 
-/* prompt card: looks like the Claude Code input box */
-.prompt { margin: 0; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); overflow: hidden; }
-.prompt figcaption {
-  display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap;
-  padding: 7px 14px; border-bottom: 1px solid var(--line); background: var(--panel-2);
-  font-family: var(--font-data); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted);
-}
-.prompt figcaption .who { color: var(--accent); font-weight: 500; }
-.prompt figcaption .src { text-transform: none; letter-spacing: 0; }
-.prompt blockquote { margin: 0; padding: 13px 14px 15px; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 10px; }
-.prompt .caret { font-family: var(--font-data); color: var(--accent); font-weight: 500; }
-.prompt .ptext { font-family: var(--font-data); font-size: 0.9rem; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
 .finding { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.25rem, 2vw, 1.55rem); line-height: 1.2; text-wrap: balance; }
 .finding-label { font-family: var(--font-data); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
 
@@ -342,11 +329,6 @@ details.numbers summary { cursor: pointer; color: var(--accent); width: max-cont
 .paper th { font-weight: 600; color: var(--muted); font-size: 0.74rem; }
 .paper ul { margin: 0; padding-left: 18px; font-size: 0.86rem; display: grid; gap: 4px; }
 .paper .fade { font-size: 0.86rem; color: var(--ink-2); }
-.steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; counter-reset: s; }
-@media (max-width: 760px) { .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-.steps li { border-top: 2px solid var(--accent); padding-top: 8px; font-size: 0.85rem; color: var(--ink-2); counter-increment: s; }
-.steps li::before { content: counter(s); font-family: var(--font-data); font-size: 0.72rem; color: var(--accent); display: block; }
-
 /* fix mockups (prototype language) */
 .moments { display: grid; gap: 14px; }
 .moment { display: grid; grid-template-columns: 11em minmax(0, 1fr) minmax(0, 1fr); gap: 14px; align-items: stretch; }
@@ -417,36 +399,6 @@ details.numbers summary { cursor: pointer; color: var(--accent); width: max-cont
 .caught .card h3 { margin-bottom: 6px; }
 .caught .card p { font-size: 0.9rem; color: var(--ink-2); }
 .caught .card .big-compare { font-weight: 600; font-size: 1.9rem; line-height: 1.1; margin: 4px 0 6px; color: var(--ink); }
-.checklist { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
-.checklist li { display: grid; grid-template-columns: 2em minmax(0, 1fr); gap: 10px; align-items: start; }
-.checklist .box { width: 2em; height: 2em; border-radius: 8px; border: 1.5px solid var(--accent); display: grid; place-items: center; font-family: var(--font-data); font-size: 0.8rem; color: var(--accent); }
-.checklist h3 { font-size: 0.98rem; }
-.checklist p { font-size: 0.86rem; color: var(--ink-2); }
-
-/* monday */
-.mondays { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
-@media (max-width: 760px) { .mondays { grid-template-columns: repeat(2, minmax(0, 1fr)); } .monday.first { grid-column: span 2; } }
-.monday { border: 1px solid var(--line); border-radius: 10px; background: var(--panel); padding: 10px 12px; display: grid; gap: 2px; }
-.monday .d { font-family: var(--font-display); font-size: 1.35rem; font-weight: 600; line-height: 1.1; }
-.monday .w { font-family: var(--font-data); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
-.monday .what { font-size: 0.78rem; color: var(--ink-2); }
-.monday.first { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
-.monday.first .w { color: var(--accent); }
-.facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 22px; margin: 0; }
-@media (max-width: 640px) { .facts { grid-template-columns: minmax(0, 1fr); } }
-.facts div { border-top: 1px solid var(--line); padding-top: 8px; }
-.facts dt { font-family: var(--font-data); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
-.facts dd { margin: 2px 0 0; font-size: 0.9rem; }
-.paths { display: grid; gap: 12px; }
-.path { display: grid; grid-template-columns: 8.5em minmax(0, 1fr); gap: 12px; align-items: center; }
-@media (max-width: 760px) { .path { grid-template-columns: minmax(0, 1fr); } }
-.path .lab { font-family: var(--font-data); font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
-.chain { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; list-style: none; margin: 0; padding: 0; }
-.chain li { font-size: 0.82rem; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel); }
-.chain li + li::before { content: "→"; color: var(--faint); margin: 0 8px 0 -2px; }
-.chain li.bad { background: var(--bad-bg); color: var(--bad-ink); border-color: transparent; }
-.chain li.good { background: var(--ok-bg); color: var(--ok-ink); border-color: transparent; }
-
 /* decisions */
 .decide { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
 .decide th, .decide td { padding: 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
@@ -474,7 +426,7 @@ details.numbers summary { cursor: pointer; color: var(--accent); width: max-cont
 <nav class="dots" id="dots" aria-label="Slides"></nav>
 <div class="deck-nav" role="group" aria-label="Move between slides">
   <button id="prev" type="button" aria-label="Previous slide">‹</button>
-  <span class="counter" id="counter">01 / 15</span>
+  <span class="counter" id="counter">01 / 13</span>
   <button id="next" type="button" aria-label="Next slide">›</button>
 </div>
 <div class="tip" id="tip" hidden></div>
@@ -491,9 +443,9 @@ details.numbers summary { cursor: pointer; color: var(--accent); width: max-cont
         <div class="title-meta"><span><b>Owner:</b> Ralph, PM, Rook Dispatch</span><span><b>Data:</b> Rook database, 29 Jun – 6 Sep 2026</span></div>
         <ol class="toc" aria-label="Contents">
           <li><a href="#s-what"><span class="n">1</span><span><span class="t">What happened</span><span class="d">Slides 2–3</span></span></a></li>
-          <li><a href="#s-m1"><span class="n">2</span><span><span class="t">How I know</span><span class="d">Modules 1–4 · slides 4–7</span></span></a></li>
-          <li><a href="#s-m5"><span class="n">3</span><span><span class="t">The fix</span><span class="d">Module 5 · slides 8–10</span></span></a></li>
-          <li><a href="#s-why"><span class="n">4</span><span><span class="t">Keeping it from happening again</span><span class="d">Module 6 · slides 11–13</span></span></a></li>
+          <li><a href="#s-m1"><span class="n">2</span><span><span class="t">The evidence</span><span class="d">Slides 4–7</span></span></a></li>
+          <li><a href="#s-m5"><span class="n">3</span><span><span class="t">The fix</span><span class="d">Slides 8–10</span></span></a></li>
+          <li><a href="#s-why"><span class="n">4</span><span><span class="t">Why it shipped this way</span><span class="d">Slide 11</span></span></a></li>
         </ol>
       </div>
       <figure class="radar" style="margin:0">
@@ -550,22 +502,18 @@ details.numbers summary { cursor: pointer; color: var(--accent); width: max-cont
       <div class="aside"><h3>The other change stays</h3><p>4.2 also made distance count more than track record (0.45 → 0.60 against 0.40 → 0.25). Wide-area responders asked for that part.</p></div>
       <div class="aside"><h3>Still unknown</h3><p>Why these four missed so much more. The database has no answer times. Aunt Dot, Vesper’s handler, says Vesper loses the race down the stairs to the phone.</p></div>
     </div>
-    <p class="source">Code: <code>00-rook/code/dispatch-routing/config.py</code> and <code>history.py</code>. Interviews: September customer interviews (wiki).</p>
+    <p class="source">Routing code: <code>config.py</code> and <code>history.py</code>. Interviews: September customer interviews.</p>
   </div>
 </section>
 
 <!-- 4 · Module 1 -->
 <section class="slide" id="s-m1" data-title="Module 1 · Origin Story">
   <div class="wrap">
-    <p class="eyebrow"><b>Part 2 · How I know</b><span class="module-chip"><span>M1</span>Origin Story</span></p>
+    <p class="eyebrow"><b>Part 2 · The evidence</b><span>Timeline</span></p>
     <div class="cols">
       <div class="stack">
         <h2>It broke on release day, and it was explained away</h2>
-        <figure class="prompt">
-          <figcaption><span class="who">I asked</span><span class="src">01-origin-story/prompts.md · #3</span></figcaption>
-          <blockquote><span class="caret" aria-hidden="true">&gt;</span><span class="ptext">do we know how long after the release of 4.2 we noticed the drop in quality?</span></blockquote>
-        </figure>
-        <p class="finding-label">What it found</p>
+        <p class="finding-label">Finding</p>
         <p class="finding">Missed pings jumped on 12 August itself. Tickets tripled within two days. The support lead flagged it on day six, but nobody pulled the numbers.</p>
         <ol class="timeline-list">
           <li><time>12 Aug</time><span>4.2 ships. 7 of that day’s 25 pings run out.</span></li>
@@ -587,17 +535,13 @@ details.numbers summary { cursor: pointer; color: var(--accent); width: max-cont
 <!-- 5 · Module 2 -->
 <section class="slide" id="s-m2" data-title="Module 2 · Super Hearing">
   <div class="wrap">
-    <p class="eyebrow"><b>Part 2 · How I know</b><span class="module-chip"><span>M2</span>Super Hearing</span></p>
+    <p class="eyebrow"><b>Part 2 · The evidence</b><span>Interviews and tickets</span></p>
     <div class="cols">
       <div class="stack">
         <h2>The interviews and the tickets heard from different people</h2>
-        <figure class="prompt">
-          <figcaption><span class="who">I asked</span><span class="src">02-super-hearing/prompts.md · #10</span></figcaption>
-          <blockquote><span class="caret" aria-hidden="true">&gt;</span><span class="ptext">You've now read both piles. Where do they disagree? What's loud in the interviews but rare in the tickets, and what's all over the tickets that nobody brought up in the interviews?</span></blockquote>
-        </figure>
-        <p class="finding-label">What it found</p>
+        <p class="finding-label">Finding</p>
         <p class="finding">The four handlers interviewed in September look after five responders, and those five have one ticket between them. The tickets came from everyone else.</p>
-        <p>Vesper and Meteor Mite, two of the four who went quiet, never appear in a single ticket. Their handlers, Aunt Dot and Kip, never filed one. Only the ping data covers all 16 responders.</p>
+        <p>Vesper and Meteor Mite, two of the four who went quiet, appear in no ticket at all. Only the ping data covers all 16 responders.</p>
       </div>
       <div class="chart-card">
         <h3>Tickets filed since 4.2, by responder</h3>
@@ -613,18 +557,13 @@ details.numbers summary { cursor: pointer; color: var(--accent); width: max-cont
 <!-- 6 · Module 3 -->
 <section class="slide" id="s-m3" data-title="Module 3 · Rewind">
   <div class="wrap">
-    <p class="eyebrow"><b>Part 2 · How I know</b><span class="module-chip"><span>M3</span>Rewind</span></p>
+    <p class="eyebrow"><b>Part 2 · The evidence</b><span>Ping data</span></p>
     <div class="cols">
       <div class="stack">
         <h2>Missed pings rose for all 16 responders. Four were hit far harder.</h2>
-        <figure class="prompt">
-          <figcaption><span class="who">I asked</span><span class="src">03-rewind/prompts.md · #1</span></figcaption>
-          <blockquote><span class="caret" aria-hidden="true">&gt;</span><span class="ptext">show me a graph highlighting the increase of missed pings.
-My goal is to understand when i happens, to check if it happens to everyone, and maybe to notice another trend or phenomena we might have missed.</span></blockquote>
-        </figure>
-        <p class="finding-label">What it found</p>
+        <p class="finding-label">Finding</p>
         <p class="finding">From 12 August every responder missed more. For twelve, misses rose to 10–18%. For the four, more than half their pings ran out, and then the pings stopped.</p>
-        <p>They got about 12 pings a week each before 4.2, and 0 or 1 in the last week. The trend I would have missed: the share of pings taken looked like it was recovering (back to 73% in the last week), mostly because those four dropped out of the average.</p>
+        <p>They got about 12 pings a week each before 4.2, and 0 or 1 in the last week. The average hides this: the share of pings taken looked like it was recovering (73% in the last week), mostly because those four dropped out of it.</p>
       </div>
       <div class="chart-card">
         <h3>Share of each responder’s pings that ran out</h3>
@@ -639,14 +578,10 @@ My goal is to understand when i happens, to check if it happens to everyone, and
 <!-- 7 · Module 4 -->
 <section class="slide" id="s-m4" data-title="Module 4 · X-Ray Vision">
   <div class="wrap">
-    <p class="eyebrow"><b>Part 2 · How I know</b><span class="module-chip"><span>M4</span>X-Ray Vision</span></p>
+    <p class="eyebrow"><b>Part 2 · The evidence</b><span>Routing code</span></p>
     <h2>The code takes points off for a miss, and gives them back only for a job</h2>
     <div class="cols even">
       <div class="stack">
-        <figure class="prompt">
-          <figcaption><span class="who">I asked</span><span class="src">04-x-ray-vision/prompts.md · #6</span></figcaption>
-          <blockquote><span class="caret" aria-hidden="true">&gt;</span><span class="ptext">Find me the part of this code that takes points off somebody when they miss a ping or turn one down. Show it to me and explain it in plain English. Then find me every single thing in this code that puts points back on.</span></blockquote>
-        </figure>
         <pre class="code" aria-label="Excerpts from config.py and history.py"><span class="file">dispatch-routing/config.py</span><span class="ln hl" data-n="8">OFFER_TIMEOUT_SECONDS = 60           <span class="c"># was 90 until 4.2</span></span><span class="ln" data-n="19">ACCEPTANCE_CREDIT = 0.08</span><span class="ln" data-n="20">DECLINE_PENALTY = 0.12</span><span class="gap"></span><span class="file">dispatch-routing/history.py</span><span class="ln" data-n="25">def record_accepted(responder):</span><span class="ln" data-n="26">    <span class="c">"""They took the callout. Score goes up."""</span></span><span class="ln hl" data-n="27">    _set(responder, recent_acceptance(responder) + ACCEPTANCE_CREDIT)</span><span class="gap"></span><span class="ln" data-n="30"><span class="c"># TODO(2019): should this ease back toward NEUTRAL_SCORE on its</span></span><span class="ln" data-n="31"><span class="c"># own after a while? For: somebody who had a bad month shouldn't still</span></span><span class="ln" data-n="32"><span class="c"># be carrying it in the spring. Against: if somebody has stopped taking</span></span><span class="ln" data-n="33"><span class="c"># work, we probably want that to stick until they take work again.</span></span><span class="ln" data-n="34"><span class="c"># Leaving it as-is for now.</span></span><span class="ln" data-n="35">def record_declined(responder):</span><span class="ln" data-n="36">    <span class="c">"""They turned it down, or we ran out of time waiting. Score goes</span></span><span class="ln hl" data-n="37">    <span class="c">down. Same either way — we asked and we didn't get a yes.</span></span><span class="ln" data-n="38">    <span class="c">"""</span></span><span class="ln hl" data-n="39">    _set(responder, recent_acceptance(responder) - DECLINE_PENALTY)</span></pre>
       </div>
       <div class="stack">
@@ -661,7 +596,7 @@ My goal is to understand when i happens, to check if it happens to everyone, and
           <div class="legend"><span><i class="key-line" style="background:var(--s-orange)"></i>Responder’s score (0 to 1)</span><span><i class="key-band"></i>Range of the other 12</span></div>
           <div class="sm-grid" id="chart-replay"></div>
           <details class="numbers"><summary>Show the numbers</summary><div class="table-scroll"><table id="table-replay"></table></div></details>
-          <p class="source">I replayed the rule in <code>history.py</code> over every real ping since 29 Jun, starting everyone at the code’s neutral 0.5. Dispatch keeps scores only in memory, so this is a reconstruction, not a log.</p>
+          <p class="source">Replay of the rule in <code>history.py</code> over every real ping since 29 Jun, starting everyone at the code’s neutral 0.5. Dispatch keeps scores only in memory, so this is a reconstruction, not a log.</p>
         </div>
       </div>
     </div>
@@ -671,26 +606,17 @@ My goal is to understand when i happens, to check if it happens to everyone, and
 <!-- 8 · Module 5: the brief -->
 <section class="slide" id="s-m5" data-title="Module 5 · The brief">
   <div class="wrap">
-    <p class="eyebrow"><b>Part 3 · The fix</b><span class="module-chip"><span>M5</span>Super Speed</span></p>
+    <p class="eyebrow"><b>Part 3 · The fix</b><span>The brief</span></p>
     <div class="cols wide-left">
       <div class="stack">
         <h2>A one-page brief for Helen</h2>
-        <p class="lede">Helen Achebe, the Director of Product, asked to see what we’d build before anyone touched the code, from the point of view of the people it happens to. Not a setting.</p>
-        <figure class="prompt">
-          <figcaption><span class="who">I asked</span><span class="src">05-super-speed/prompts.md · #3</span></figcaption>
-          <blockquote><span class="caret" aria-hidden="true">&gt;</span><span class="ptext">yes draft the brief for me. I want a version that is simple to read and understand for someone not super familiar with the subject. Add the key data. Keep it short.</span></blockquote>
-        </figure>
-        <ol class="steps" aria-label="How the brief was made">
-          <li>Drafted around Kip, who looks after Meteor Mite and The Gale</li>
-          <li>Read by three AI “Helens” (Opus, Sonnet, Haiku) until they agreed</li>
-          <li>Cut to about one page</li>
-          <li>Turned into a click-through prototype</li>
-        </ol>
-        <p class="source">File: <a href="05-super-speed/brief.md"><code>05-super-speed/brief.md</code></a></p>
+        <p class="lede">What we’d build, seen by the people it happens to: Kip, who looks after Meteor Mite and The Gale, and Meteor Mite, whose phone went quiet.</p>
+        <p>Five decisions for Helen are on slide 12.</p>
+        
       </div>
       <article class="paper" aria-label="Excerpt from the brief">
         <h3>No responder goes quiet without anyone knowing</h3>
-        <p class="meta">Draft for Helen Achebe · Rook Dispatch · October 2026</p>
+        <p class="meta">Owner: Ralph, PM, Rook Dispatch · Draft for Helen Achebe · October 2026</p>
         <h4>The problem</h4>
         <table>
           <thead><tr><th></th><th>Before 4.2</th><th>Since 4.2</th></tr></thead>
@@ -700,6 +626,7 @@ My goal is to understand when i happens, to check if it happens to everyone, and
             <tr><td>The Gale: pings a week</td><td>about 13</td><td><strong>about 21</strong> by late August</td></tr>
             <tr><td>All responders: pings missed</td><td>2.3% (1 in 44)</td><td><strong>18%</strong> (1 in 6); 13% latest week</td></tr>
             <tr><td>Time to answer a ping</td><td>90 seconds</td><td><strong>60 seconds</strong></td></tr>
+            <tr><td>Time to fill a callout</td><td>about 21 seconds</td><td><strong>about 32 seconds</strong></td></tr>
           </tbody>
         </table>
         <h4>What we’d build</h4>
@@ -775,7 +702,7 @@ My goal is to understand when i happens, to check if it happens to everyone, and
         </div>
       </div>
     </div>
-    <p class="source">The prototype’s working values (90 seconds, half a “no”, a warning after 3 quiet days) are for Helen to decide; the brief leaves them open. Source: <code>05-super-speed/prototype.html</code>.</p>
+    <p class="source">The prototype uses working values (90 seconds, half a “no”, a warning after 3 quiet days). They are for Helen to decide.</p>
   </div>
 </section>
 
@@ -784,18 +711,18 @@ My goal is to understand when i happens, to check if it happens to everyone, and
   <div class="wrap">
     <p class="eyebrow"><b>Part 3 · The fix</b><span>Click-through</span></p>
     <h2>Try it: the click-through prototype</h2>
-    <p class="lede">This is the prototype itself, built in Module 5 from the brief. Flip between <strong>Today</strong> and <strong>With the fix</strong>, then step through one evening. Countdowns run 10 times faster than real time.</p>
+    <p class="lede">Flip between <strong>Today</strong> and <strong>With the fix</strong>, then step through one evening. Countdowns run 10 times faster than real time.</p>
     <div class="frame-wrap">
       <div class="frame-bar">
         <span><span class="dots3" aria-hidden="true"><i></i><i></i><i></i></span>Gone Quiet Prototype · prototype, not live</span>
         <span class="frame-actions"><button class="btn ghost" type="button" id="proto-full">Full screen</button><a href="05-super-speed/prototype.html">Open the file on its own</a></span>
       </div>
-      <iframe class="proto-frame" id="proto-frame" title="Gone Quiet prototype: what Kip and Meteor Mite would see" sandbox="allow-scripts" loading="lazy" srcdoc="<!doctype html><html lang=&quot;en&quot;><head><meta charset=&quot;utf-8&quot;><meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;><title>Gone Quiet Prototype</title>
-<meta name=&quot;claude:viewport-fit-sides&quot; content=&quot;cover&quot;>
-<link rel=&quot;preconnect&quot; href=&quot;https://fonts.googleapis.com&quot;>
-<link rel=&quot;preconnect&quot; href=&quot;https://fonts.gstatic.com&quot; crossorigin>
-<link rel=&quot;stylesheet&quot; href=&quot;https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap&quot;>
-<style>
+      <iframe class="proto-frame" id="proto-frame" title="Gone Quiet prototype: what Kip and Meteor Mite would see" sandbox="allow-scripts" loading="lazy" srcdoc="&lt;!doctype html&gt;&lt;html lang=&quot;en&quot;&gt;&lt;head&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;&lt;title&gt;Gone Quiet Prototype&lt;/title&gt;
+&lt;meta name=&quot;claude:viewport-fit-sides&quot; content=&quot;cover&quot;&gt;
+&lt;link rel=&quot;preconnect&quot; href=&quot;https://fonts.googleapis.com&quot;&gt;
+&lt;link rel=&quot;preconnect&quot; href=&quot;https://fonts.gstatic.com&quot; crossorigin&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap&quot;&gt;
+&lt;style&gt;
 /* Layout: story controls on top, then a dispatch console (left) beside the responder's phone (right); rules strip below. */
 :root {
   --bg: #eef1f4;
@@ -910,85 +837,85 @@ button:focus-visible { outline: 3px solid var(--warn-line); outline-offset: 2px;
 .rules-col h3 { margin: 0 0 6px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
 .rules-col ul { margin: 0; padding-left: 18px; font-size: 0.88rem; }
 footer { color: var(--muted); font-size: 0.8rem; max-width: 80ch; }
-</style>
+&lt;/style&gt;
 
-<div class=&quot;wrap&quot;>
-  <header>
-    <h1>Gone quiet: what Kip and Meteor Mite would see</h1>
-    <p class=&quot;sub&quot;>A click-through for the brief &quot;No responder goes quiet without anyone knowing&quot;. Flip between how Dispatch works today and with the proposed fix, and step through one evening.</p>
-    <div class=&quot;tags&quot;>
-      <span class=&quot;tag&quot;>Prototype, not live</span>
-      <span class=&quot;tag&quot;>Draft wording</span>
-      <span class=&quot;tag&quot;>Numbers: real Rook data to 6 Sep, unless marked example</span>
-    </div>
-  </header>
+&lt;div class=&quot;wrap&quot;&gt;
+  &lt;header&gt;
+    &lt;h1&gt;Gone quiet: what Kip and Meteor Mite would see&lt;/h1&gt;
+    &lt;p class=&quot;sub&quot;&gt;A click-through for the brief &quot;No responder goes quiet without anyone knowing&quot;. Flip between how Dispatch works today and with the proposed fix, and step through one evening.&lt;/p&gt;
+    &lt;div class=&quot;tags&quot;&gt;
+      &lt;span class=&quot;tag&quot;&gt;Prototype, not live&lt;/span&gt;
+      &lt;span class=&quot;tag&quot;&gt;Draft wording&lt;/span&gt;
+      &lt;span class=&quot;tag&quot;&gt;Numbers: real Rook data to 6 Sep, unless marked example&lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/header&gt;
 
-  <div class=&quot;controls&quot;>
-    <div class=&quot;seg&quot; role=&quot;group&quot; aria-label=&quot;Version&quot;>
-      <button id=&quot;mode-today&quot; type=&quot;button&quot; aria-pressed=&quot;true&quot;>Today</button>
-      <button id=&quot;mode-fix&quot; type=&quot;button&quot; aria-pressed=&quot;false&quot;>With the fix</button>
-    </div>
-    <div class=&quot;stepper&quot;>
-      <button id=&quot;back&quot; class=&quot;btn&quot; type=&quot;button&quot;>Back</button>
-      <div class=&quot;dots&quot; id=&quot;dots&quot; aria-hidden=&quot;true&quot;></div>
-      <button id=&quot;next&quot; class=&quot;btn primary&quot; type=&quot;button&quot;>Next</button>
-      <button id=&quot;restart&quot; class=&quot;btn&quot; type=&quot;button&quot;>Start again</button>
-    </div>
-  </div>
+  &lt;div class=&quot;controls&quot;&gt;
+    &lt;div class=&quot;seg&quot; role=&quot;group&quot; aria-label=&quot;Version&quot;&gt;
+      &lt;button id=&quot;mode-today&quot; type=&quot;button&quot; aria-pressed=&quot;true&quot;&gt;Today&lt;/button&gt;
+      &lt;button id=&quot;mode-fix&quot; type=&quot;button&quot; aria-pressed=&quot;false&quot;&gt;With the fix&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;stepper&quot;&gt;
+      &lt;button id=&quot;back&quot; class=&quot;btn&quot; type=&quot;button&quot;&gt;Back&lt;/button&gt;
+      &lt;div class=&quot;dots&quot; id=&quot;dots&quot; aria-hidden=&quot;true&quot;&gt;&lt;/div&gt;
+      &lt;button id=&quot;next&quot; class=&quot;btn primary&quot; type=&quot;button&quot;&gt;Next&lt;/button&gt;
+      &lt;button id=&quot;restart&quot; class=&quot;btn&quot; type=&quot;button&quot;&gt;Start again&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
 
-  <section class=&quot;story&quot; aria-live=&quot;polite&quot;>
-    <div class=&quot;step-name&quot; id=&quot;step-name&quot;></div>
-    <p id=&quot;step-text&quot;></p>
-  </section>
+  &lt;section class=&quot;story&quot; aria-live=&quot;polite&quot;&gt;
+    &lt;div class=&quot;step-name&quot; id=&quot;step-name&quot;&gt;&lt;/div&gt;
+    &lt;p id=&quot;step-text&quot;&gt;&lt;/p&gt;
+  &lt;/section&gt;
 
-  <div class=&quot;stage&quot;>
-    <section class=&quot;console&quot; aria-label=&quot;Kip's Rook console&quot;>
-      <div class=&quot;console-bar&quot;><span><strong>Rook console</strong> &amp;middot; Kip &amp;middot; Eastgate coverage</span><span>Wed 3 Sep, 21:10</span></div>
-      <div class=&quot;cards&quot;>
-        <article class=&quot;card&quot; id=&quot;card-mite&quot;></article>
-        <article class=&quot;card&quot; id=&quot;card-gale&quot;></article>
-      </div>
-    </section>
+  &lt;div class=&quot;stage&quot;&gt;
+    &lt;section class=&quot;console&quot; aria-label=&quot;Kip's Rook console&quot;&gt;
+      &lt;div class=&quot;console-bar&quot;&gt;&lt;span&gt;&lt;strong&gt;Rook console&lt;/strong&gt; &amp;middot; Kip &amp;middot; Eastgate coverage&lt;/span&gt;&lt;span&gt;Wed 3 Sep, 21:10&lt;/span&gt;&lt;/div&gt;
+      &lt;div class=&quot;cards&quot;&gt;
+        &lt;article class=&quot;card&quot; id=&quot;card-mite&quot;&gt;&lt;/article&gt;
+        &lt;article class=&quot;card&quot; id=&quot;card-gale&quot;&gt;&lt;/article&gt;
+      &lt;/div&gt;
+    &lt;/section&gt;
 
-    <div class=&quot;phone-col&quot;>
-      <div class=&quot;phone&quot; aria-label=&quot;Meteor Mite's phone&quot;>
-        <div class=&quot;screen&quot; id=&quot;screen&quot;></div>
-      </div>
-      <div class=&quot;note&quot; id=&quot;phone-note&quot;></div>
-    </div>
-  </div>
+    &lt;div class=&quot;phone-col&quot;&gt;
+      &lt;div class=&quot;phone&quot; aria-label=&quot;Meteor Mite's phone&quot;&gt;
+        &lt;div class=&quot;screen&quot; id=&quot;screen&quot;&gt;&lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;note&quot; id=&quot;phone-note&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
 
-  <section class=&quot;rules&quot; aria-label=&quot;Rules used in this demo&quot;>
-    <h2>Rules behind each version</h2>
-    <div class=&quot;rules-grid&quot;>
-      <div class=&quot;rules-col&quot; id=&quot;rules-today&quot;>
-        <h3>Today (release 4.2)</h3>
-        <ul>
-          <li>60 seconds to answer a ping</li>
-          <li>Running out of time costs the same as a &quot;no&quot;</li>
-          <li>A responder's place never recovers on its own</li>
-          <li>The handler is never warned</li>
-          <li>Nothing a handler does changes a responder's place</li>
-        </ul>
-      </div>
-      <div class=&quot;rules-col&quot; id=&quot;rules-fix&quot;>
-        <h3>With the fix (all to decide)</h3>
-        <ul>
-          <li>90 seconds to answer a ping</li>
-          <li>Running out of time costs half a &quot;no&quot;</li>
-          <li>Places drift halfway back to the middle in about 2 weeks</li>
-          <li>Handler warned after 3 quiet days while available</li>
-          <li>Handler can put a responder back in the queue once; it is logged</li>
-          <li>The four quiet responders are reset once</li>
-        </ul>
-      </div>
-    </div>
-  </section>
+  &lt;section class=&quot;rules&quot; aria-label=&quot;Rules used in this demo&quot;&gt;
+    &lt;h2&gt;Rules behind each version&lt;/h2&gt;
+    &lt;div class=&quot;rules-grid&quot;&gt;
+      &lt;div class=&quot;rules-col&quot; id=&quot;rules-today&quot;&gt;
+        &lt;h3&gt;Today (release 4.2)&lt;/h3&gt;
+        &lt;ul&gt;
+          &lt;li&gt;60 seconds to answer a ping&lt;/li&gt;
+          &lt;li&gt;Running out of time costs the same as a &quot;no&quot;&lt;/li&gt;
+          &lt;li&gt;A responder's place never recovers on its own&lt;/li&gt;
+          &lt;li&gt;The handler is never warned&lt;/li&gt;
+          &lt;li&gt;Nothing a handler does changes a responder's place&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;rules-col&quot; id=&quot;rules-fix&quot;&gt;
+        &lt;h3&gt;With the fix (all to decide)&lt;/h3&gt;
+        &lt;ul&gt;
+          &lt;li&gt;90 seconds to answer a ping&lt;/li&gt;
+          &lt;li&gt;Running out of time costs half a &quot;no&quot;&lt;/li&gt;
+          &lt;li&gt;Places drift halfway back to the middle in about 2 weeks&lt;/li&gt;
+          &lt;li&gt;Handler warned after 3 quiet days while available&lt;/li&gt;
+          &lt;li&gt;Handler can put a responder back in the queue once; it is logged&lt;/li&gt;
+          &lt;li&gt;The four quiet responders are reset once&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
 
-  <footer>Sources: Rook database (pings and callouts, 29 Jun to 6 Sep 2026), routing code, Kip's interview of 4 Sep. Weekly pings and dates are real. The callouts on the phone are real Eastgate callouts from early September, reused as examples. Countdowns run 10 times faster than real time.</footer>
-</div>
+  &lt;footer&gt;Sources: Rook database (pings and callouts, 29 Jun to 6 Sep 2026), routing code, Kip's interview of 4 Sep. Weekly pings and dates are real. The callouts on the phone are real Eastgate callouts from early September, reused as examples. Countdowns run 10 times faster than real time.&lt;/footer&gt;
+&lt;/div&gt;
 
-<script>
+&lt;script&gt;
 (function () {
   var MITE_WEEKS = [11, 12, 10, 11, 12, 11, 10, 4, 2, 1];
   var WEEK_LABELS = [&quot;29 Jun&quot;, &quot;31 Aug&quot;];
@@ -1016,11 +943,11 @@ footer { color: var(--muted); font-size: 0.8rem; max-width: 80ch; }
   var state = { mode: &quot;today&quot;, step: 0, requeued: false, timer: null, remaining: 0, total: 0, phase: &quot;idle&quot;, taken: false };
   var el = function (id) { return document.getElementById(id); };
 
-  function esc(s) { return String(s).replace(/[&amp;<>&quot;]/g, function (c) { return { &quot;&amp;&quot;: &quot;&amp;amp;&quot;, &quot;<&quot;: &quot;&amp;lt;&quot;, &quot;>&quot;: &quot;&amp;gt;&quot;, '&quot;': &quot;&amp;quot;&quot; }[c]; }); }
+  function esc(s) { return String(s).replace(/[&amp;&lt;&gt;&quot;]/g, function (c) { return { &quot;&amp;&quot;: &quot;&amp;amp;&quot;, &quot;&lt;&quot;: &quot;&amp;lt;&quot;, &quot;&gt;&quot;: &quot;&amp;gt;&quot;, '&quot;': &quot;&amp;quot;&quot; }[c]; }); }
 
   function renderDots() {
     var html = &quot;&quot;;
-    for (var i = 0; i < STEPS.length; i++) html += '<span class=&quot;dot' + (i === state.step ? &quot; on&quot; : &quot;&quot;) + '&quot;></span>';
+    for (var i = 0; i &lt; STEPS.length; i++) html += '&lt;span class=&quot;dot' + (i === state.step ? &quot; on&quot; : &quot;&quot;) + '&quot;&gt;&lt;/span&gt;';
     el(&quot;dots&quot;).innerHTML = html;
   }
 
@@ -1035,38 +962,38 @@ footer { color: var(--muted); font-size: 0.8rem; max-width: 80ch; }
   function miteCard() {
     var fix = state.mode === &quot;fix&quot;;
     var step = state.step;
-    var html = '<div class=&quot;card-head&quot;><div><div class=&quot;card-name&quot;>Meteor Mite</div><div class=&quot;card-meta&quot;>Eastgate &amp;middot; handled by Kip</div></div><span class=&quot;pill avail&quot;>Available</span></div>';
-    if (fix &amp;&amp; !state.requeued &amp;&amp; step <= 2) {
-      html += '<div class=&quot;warn&quot; role=&quot;status&quot;><div class=&quot;warn-title&quot;>Gone quiet: available, but not asked in 5 days<span class=&quot;draft&quot;>Draft wording</span></div>';
-      if (step >= 1) {
+    var html = '&lt;div class=&quot;card-head&quot;&gt;&lt;div&gt;&lt;div class=&quot;card-name&quot;&gt;Meteor Mite&lt;/div&gt;&lt;div class=&quot;card-meta&quot;&gt;Eastgate &amp;middot; handled by Kip&lt;/div&gt;&lt;/div&gt;&lt;span class=&quot;pill avail&quot;&gt;Available&lt;/span&gt;&lt;/div&gt;';
+    if (fix &amp;&amp; !state.requeued &amp;&amp; step &lt;= 2) {
+      html += '&lt;div class=&quot;warn&quot; role=&quot;status&quot;&gt;&lt;div class=&quot;warn-title&quot;&gt;Gone quiet: available, but not asked in 5 days&lt;span class=&quot;draft&quot;&gt;Draft wording&lt;/span&gt;&lt;/div&gt;';
+      if (step &gt;= 1) {
         var max = Math.max.apply(null, MITE_WEEKS);
-        var bars = MITE_WEEKS.map(function (n) { return '<span style=&quot;height:' + Math.round(n / max * 100) + '%&quot; title=&quot;' + n + ' pings&quot;></span>'; }).join(&quot;&quot;);
-        html += '<p>Of Mite\'s last 6 pings, 3 ran out of time and 2 were turned down. Each one moved Mite down the queue, so Mite is now asked last.</p>' +
-          '<div><div class=&quot;bars&quot; role=&quot;img&quot; aria-label=&quot;Pings per week from 29 June to 31 August: ' + MITE_WEEKS.join(&quot;, &quot;) + '&quot;>' + bars + '</div>' +
-          '<div class=&quot;bars-cap&quot;><span>' + WEEK_LABELS[0] + '</span><span>Pings per week</span><span>' + WEEK_LABELS[1] + '</span></div></div>';
+        var bars = MITE_WEEKS.map(function (n) { return '&lt;span style=&quot;height:' + Math.round(n / max * 100) + '%&quot; title=&quot;' + n + ' pings&quot;&gt;&lt;/span&gt;'; }).join(&quot;&quot;);
+        html += '&lt;p&gt;Of Mite\'s last 6 pings, 3 ran out of time and 2 were turned down. Each one moved Mite down the queue, so Mite is now asked last.&lt;/p&gt;' +
+          '&lt;div&gt;&lt;div class=&quot;bars&quot; role=&quot;img&quot; aria-label=&quot;Pings per week from 29 June to 31 August: ' + MITE_WEEKS.join(&quot;, &quot;) + '&quot;&gt;' + bars + '&lt;/div&gt;' +
+          '&lt;div class=&quot;bars-cap&quot;&gt;&lt;span&gt;' + WEEK_LABELS[0] + '&lt;/span&gt;&lt;span&gt;Pings per week&lt;/span&gt;&lt;span&gt;' + WEEK_LABELS[1] + '&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;';
       }
-      if (step >= 2) {
-        html += '<button id=&quot;requeue&quot; class=&quot;btn primary pulse&quot; type=&quot;button&quot;>Put back in the queue</button>';
+      if (step &gt;= 2) {
+        html += '&lt;button id=&quot;requeue&quot; class=&quot;btn primary pulse&quot; type=&quot;button&quot;&gt;Put back in the queue&lt;/button&gt;';
       }
-      html += '</div>';
+      html += '&lt;/div&gt;';
     }
     if (fix &amp;&amp; state.requeued) {
-      var line = step >= 4 &amp;&amp; !state.taken ? &quot;Last ping ran out of time. Counted as half a \&quot;no\&quot;; Mite stays in the running.&quot; : &quot;Back in the queue. Logged: Kip, Wed 3 Sep 21:12.&quot;;
+      var line = step &gt;= 4 &amp;&amp; !state.taken ? &quot;Last ping ran out of time. Counted as half a \&quot;no\&quot;; Mite stays in the running.&quot; : &quot;Back in the queue. Logged: Kip, Wed 3 Sep 21:12.&quot;;
       if (state.taken) line = &quot;Took an Eastgate callout at 21:31. Mite is back in the rotation.&quot;;
-      html += '<div class=&quot;ok-box&quot; role=&quot;status&quot;>' + esc(line) + '<span class=&quot;draft&quot;>Draft wording</span></div>';
+      html += '&lt;div class=&quot;ok-box&quot; role=&quot;status&quot;&gt;' + esc(line) + '&lt;span class=&quot;draft&quot;&gt;Draft wording&lt;/span&gt;&lt;/div&gt;';
     }
-    html += '<div class=&quot;stat&quot;><span>Pings last week (24&amp;ndash;30 Aug)</span><b>2</b></div>';
-    html += '<div class=&quot;stat&quot;><span>Before 4.2, a typical week</span><b>11</b></div>';
+    html += '&lt;div class=&quot;stat&quot;&gt;&lt;span&gt;Pings last week (24&amp;ndash;30 Aug)&lt;/span&gt;&lt;b&gt;2&lt;/b&gt;&lt;/div&gt;';
+    html += '&lt;div class=&quot;stat&quot;&gt;&lt;span&gt;Before 4.2, a typical week&lt;/span&gt;&lt;b&gt;11&lt;/b&gt;&lt;/div&gt;';
     return html;
   }
 
   function galeCard() {
     var fix = state.mode === &quot;fix&quot;;
-    var html = '<div class=&quot;card-head&quot;><div><div class=&quot;card-name&quot;>The Gale</div><div class=&quot;card-meta&quot;>Eastgate &amp;middot; handled by Kip</div></div><span class=&quot;pill busy&quot;>' + (fix &amp;&amp; state.step === 5 ? &quot;Available&quot; : &quot;On a job&quot;) + '</span></div>';
-    if (!fix &amp;&amp; state.step === 5) html += '<div class=&quot;note&quot;>New job assigned 21:31: the Eastgate callout Mite never got.</div>';
-    if (fix &amp;&amp; state.step === 5) html += '<div class=&quot;ok-box&quot;>Eastgate jobs are shared with Meteor Mite again.<span class=&quot;draft&quot;>Draft wording</span></div>';
-    html += '<div class=&quot;stat&quot;><span>Pings last week (24&amp;ndash;30 Aug)</span><b>20</b></div>';
-    html += '<div class=&quot;stat&quot;><span>Before 4.2, a typical week</span><b>13</b></div>';
+    var html = '&lt;div class=&quot;card-head&quot;&gt;&lt;div&gt;&lt;div class=&quot;card-name&quot;&gt;The Gale&lt;/div&gt;&lt;div class=&quot;card-meta&quot;&gt;Eastgate &amp;middot; handled by Kip&lt;/div&gt;&lt;/div&gt;&lt;span class=&quot;pill busy&quot;&gt;' + (fix &amp;&amp; state.step === 5 ? &quot;Available&quot; : &quot;On a job&quot;) + '&lt;/span&gt;&lt;/div&gt;';
+    if (!fix &amp;&amp; state.step === 5) html += '&lt;div class=&quot;note&quot;&gt;New job assigned 21:31: the Eastgate callout Mite never got.&lt;/div&gt;';
+    if (fix &amp;&amp; state.step === 5) html += '&lt;div class=&quot;ok-box&quot;&gt;Eastgate jobs are shared with Meteor Mite again.&lt;span class=&quot;draft&quot;&gt;Draft wording&lt;/span&gt;&lt;/div&gt;';
+    html += '&lt;div class=&quot;stat&quot;&gt;&lt;span&gt;Pings last week (24&amp;ndash;30 Aug)&lt;/span&gt;&lt;b&gt;20&lt;/b&gt;&lt;/div&gt;';
+    html += '&lt;div class=&quot;stat&quot;&gt;&lt;span&gt;Before 4.2, a typical week&lt;/span&gt;&lt;b&gt;13&lt;/b&gt;&lt;/div&gt;';
     return html;
   }
 
@@ -1078,39 +1005,39 @@ footer { color: var(--muted); font-size: 0.8rem; max-width: 80ch; }
     var shownSecs = Math.ceil(t * 10);
     var p = total ? t / total : 1;
     var label = state.mode === &quot;fix&quot; ? &quot;90 seconds&quot; : &quot;60 seconds&quot;;
-    return '<div class=&quot;ping&quot;><div class=&quot;ping-label&quot;>New callout &amp;middot; Eastgate &amp;middot; example</div>' +
-      '<div class=&quot;ping-what&quot;>' + esc(what) + '</div>' +
-      (live ? '<div class=&quot;ring-row&quot;><div class=&quot;ring&quot; style=&quot;--p:' + p.toFixed(3) + '&quot;><span>' + shownSecs + 's</span></div><div class=&quot;note&quot;>' + label + ' to answer.<br>Shown 10x faster.</div></div>' : '') +
-      '<div class=&quot;ping-actions&quot;><button class=&quot;btn primary&quot; type=&quot;button&quot; id=&quot;take&quot;' + (live ? &quot;&quot; : &quot; disabled&quot;) + '>Take it</button><button class=&quot;btn&quot; type=&quot;button&quot; id=&quot;decline&quot;' + (live ? &quot;&quot; : &quot; disabled&quot;) + '>Turn down</button></div></div>';
+    return '&lt;div class=&quot;ping&quot;&gt;&lt;div class=&quot;ping-label&quot;&gt;New callout &amp;middot; Eastgate &amp;middot; example&lt;/div&gt;' +
+      '&lt;div class=&quot;ping-what&quot;&gt;' + esc(what) + '&lt;/div&gt;' +
+      (live ? '&lt;div class=&quot;ring-row&quot;&gt;&lt;div class=&quot;ring&quot; style=&quot;--p:' + p.toFixed(3) + '&quot;&gt;&lt;span&gt;' + shownSecs + 's&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;note&quot;&gt;' + label + ' to answer.&lt;br&gt;Shown 10x faster.&lt;/div&gt;&lt;/div&gt;' : '') +
+      '&lt;div class=&quot;ping-actions&quot;&gt;&lt;button class=&quot;btn primary&quot; type=&quot;button&quot; id=&quot;take&quot;' + (live ? &quot;&quot; : &quot; disabled&quot;) + '&gt;Take it&lt;/button&gt;&lt;button class=&quot;btn&quot; type=&quot;button&quot; id=&quot;decline&quot;' + (live ? &quot;&quot; : &quot; disabled&quot;) + '&gt;Turn down&lt;/button&gt;&lt;/div&gt;&lt;/div&gt;';
   }
 
   function renderPhone() {
     var fix = state.mode === &quot;fix&quot;;
     var step = state.step;
-    var html = '<div class=&quot;screen-top&quot;><span>Meteor Mite</span><span>21:' + (step >= 5 ? &quot;31&quot; : step >= 3 ? &quot;14&quot; : &quot;10&quot;) + '</span></div>';
+    var html = '&lt;div class=&quot;screen-top&quot;&gt;&lt;span&gt;Meteor Mite&lt;/span&gt;&lt;span&gt;21:' + (step &gt;= 5 ? &quot;31&quot; : step &gt;= 3 ? &quot;14&quot; : &quot;10&quot;) + '&lt;/span&gt;&lt;/div&gt;';
     var note = &quot;&quot;;
-    if (step <= 2) {
-      html += '<div class=&quot;empty&quot;>No callouts.<br>Last ping: Fri 29 Aug.</div>';
+    if (step &lt;= 2) {
+      html += '&lt;div class=&quot;empty&quot;&gt;No callouts.&lt;br&gt;Last ping: Fri 29 Aug.&lt;/div&gt;';
     } else if (step === 3) {
       html += pingCard(CALLOUT_1, state.phase === &quot;ringing&quot;);
-      note = state.phase === &quot;ringing&quot; ? '<button class=&quot;btn&quot; type=&quot;button&quot; id=&quot;skip&quot;>Skip to the end of the countdown</button>' : &quot;&quot;;
+      note = state.phase === &quot;ringing&quot; ? '&lt;button class=&quot;btn&quot; type=&quot;button&quot; id=&quot;skip&quot;&gt;Skip to the end of the countdown&lt;/button&gt;' : &quot;&quot;;
       if (state.phase === &quot;ringing&quot;) note = &quot;Mite is on the stairs. &quot; + note;
     } else if (step === 4) {
       if (fix) {
-        html += '<div class=&quot;msg&quot;><strong>This one moved on. You\'re still on the list.</strong><span class=&quot;note&quot;>We gave it to the next responder after 90 seconds. Running out of time doesn\'t take you off the list.<span class=&quot;draft&quot;>Draft wording</span></span></div>';
+        html += '&lt;div class=&quot;msg&quot;&gt;&lt;strong&gt;This one moved on. You\'re still on the list.&lt;/strong&gt;&lt;span class=&quot;note&quot;&gt;We gave it to the next responder after 90 seconds. Running out of time doesn\'t take you off the list.&lt;span class=&quot;draft&quot;&gt;Draft wording&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;';
       } else {
-        html += '<div class=&quot;empty&quot;>Nothing here.<br>The callout disappeared without a message.</div>';
+        html += '&lt;div class=&quot;empty&quot;&gt;Nothing here.&lt;br&gt;The callout disappeared without a message.&lt;/div&gt;';
       }
     } else if (step === 5) {
       if (fix) {
         if (state.taken) {
-          html += '<div class=&quot;msg&quot;><strong>It\'s yours.</strong><span>' + esc(CALLOUT_2) + '</span><span class=&quot;note&quot;>Kip can see you took it.<span class=&quot;draft&quot;>Draft wording</span></span></div>';
+          html += '&lt;div class=&quot;msg&quot;&gt;&lt;strong&gt;It\'s yours.&lt;/strong&gt;&lt;span&gt;' + esc(CALLOUT_2) + '&lt;/span&gt;&lt;span class=&quot;note&quot;&gt;Kip can see you took it.&lt;span class=&quot;draft&quot;&gt;Draft wording&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;';
         } else {
           html += pingCard(CALLOUT_2, true);
           note = &quot;Tap Take it.&quot;;
         }
       } else {
-        html += '<div class=&quot;empty&quot;>No callouts.<br>Mite won\'t be asked again until Fri 5 Sep, in real life.</div>';
+        html += '&lt;div class=&quot;empty&quot;&gt;No callouts.&lt;br&gt;Mite won\'t be asked again until Fri 5 Sep, in real life.&lt;/div&gt;';
       }
     }
     el(&quot;screen&quot;).innerHTML = html;
@@ -1150,7 +1077,7 @@ footer { color: var(--muted); font-size: 0.8rem; max-width: 80ch; }
       var now = Date.now();
       state.remaining = Math.max(0, state.remaining - (now - last) / 1000);
       last = now;
-      if (state.remaining <= 0) { finishCountdown(); } else { renderPhone(); }
+      if (state.remaining &lt;= 0) { finishCountdown(); } else { renderPhone(); }
     }, 100);
   }
 
@@ -1164,9 +1091,9 @@ footer { color: var(--muted); font-size: 0.8rem; max-width: 80ch; }
   function goTo(step) {
     stopTimer();
     state.step = Math.max(0, Math.min(STEPS.length - 1, step));
-    if (state.step <= 2) { state.requeued = false; }
-    if (state.mode === &quot;fix&quot; &amp;&amp; state.step >= 3) state.requeued = true;
-    if (state.step < 5) state.taken = false;
+    if (state.step &lt;= 2) { state.requeued = false; }
+    if (state.mode === &quot;fix&quot; &amp;&amp; state.step &gt;= 3) state.requeued = true;
+    if (state.step &lt; 5) state.taken = false;
     state.phase = &quot;idle&quot;;
     if (state.step === 3) startCountdown();
     render();
@@ -1182,19 +1109,18 @@ footer { color: var(--muted); font-size: 0.8rem; max-width: 80ch; }
   el(&quot;mode-fix&quot;).onclick = function () { state.mode = &quot;fix&quot;; goTo(state.step); };
   render();
 })();
-</script>
-</html>"></iframe>
+&lt;/script&gt;
+&lt;/html&gt;"></iframe>
     </div>
-    <p class="source">Embedded copy of <code>05-super-speed/prototype.html</code> as of 22 Oct 2026. A private link also exists on claude.ai; Helen can only open it once it is shared from the Share menu.</p>
   </div>
 </section>
 
 <!-- 11 · Why it shipped -->
 <section class="slide" id="s-why" data-title="Why it shipped">
   <div class="wrap">
-    <p class="eyebrow"><b>Part 4 · Keeping it from happening again</b></p>
+    <p class="eyebrow"><b>Part 4 · Why it shipped this way</b></p>
     <h2>4.2 shipped from two one-line briefs</h2>
-    <p class="lede">Both routing changes were built exactly as briefed. Here are the briefs, word for word, from the Q3 roadmap on the wiki, run through my review checklist.</p>
+    <p class="lede">Both routing changes were built exactly as briefed. Here are the two briefs, word for word, from the Q3 roadmap, checked against four basics every brief needs.</p>
     <div class="cols even">
       <div class="stack">
         <div class="wiki">
@@ -1234,86 +1160,11 @@ footer { color: var(--muted); font-size: 0.8rem; max-width: 80ch; }
         <p>Share of callouts where the responder from the callout’s own area was asked first, before and since 4.2. The change was meant to raise it.</p>
       </div>
     </div>
-    <p class="source">Wiki: Q3 roadmap, “Ping timeout tuning” and “Change to who gets pinged”. Evidence: Module 1 (tickets before 4.2), Rook database (<code>pings</code>, <code>callouts</code>, <code>responders</code>), Module 4 code read.</p>
+    <p class="source">Wiki: Q3 roadmap, “Ping timeout tuning” and “Change to who gets pinged”. Evidence: Rook database (<code>support_tickets</code>, <code>pings</code>, <code>callouts</code>, <code>responders</code>) and the routing code.</p>
   </div>
 </section>
 
-<!-- 12 · Module 6: the skill -->
-<section class="slide" id="s-m6" data-title="Module 6 · The checklist">
-  <div class="wrap">
-    <p class="eyebrow"><b>Part 4 · Keeping it from happening again</b><span class="module-chip"><span>M6</span>Sidekicks</span></p>
-    <h2>A checklist that reads every brief before it ships</h2>
-    <div class="cols even">
-      <div class="stack">
-        <figure class="prompt">
-          <figcaption><span class="who">I asked</span><span class="src">05-super-speed/prompts.md · #10, saved with Module 5</span></figcaption>
-          <blockquote><span class="caret" aria-hidden="true">&gt;</span><span class="ptext">Make a skill called review-checklist. When I point it at a brief, it checks that the brief: names who owns it, says how we'll know it worked, keeps the same scope start to finish, and explains the problem before the fix.</span></blockquote>
-        </figure>
-        <ol class="checklist" aria-label="The four checks">
-          <li><span class="box">1</span><div><h3>Names who owns it</h3><p>A named person. “Draft for Helen” says who it’s for, not who owns it.</p></div></li>
-          <li><span class="box">2</span><div><h3>Says how we’ll know it worked</h3><p>Where we are today, the target, and who checks it, by when.</p></div></li>
-          <li><span class="box">3</span><div><h3>Keeps the same scope start to finish</h3><p>Every problem gets a fix, every fix has a problem, and the measure tracks what’s proposed.</p></div></li>
-          <li><span class="box">4</span><div><h3>Explains the problem before the fix</h3><p>Who is affected, what goes wrong, and the evidence, before any solution.</p></div></li>
-        </ol>
-        <p class="source">Skill: <code>.claude/skills/review-checklist/SKILL.md</code>. It reports Pass, Partial or Fail with quotes as evidence, and never edits the brief. It checks how a brief is written, not whether its numbers are right.</p>
-      </div>
-      <div class="stack">
-        <p class="finding-label">First real run: my own brief</p>
-        <div class="table-wrap card" style="padding:6px 8px">
-          <table class="checks">
-            <thead><tr><th>Check</th><th>Result and evidence</th></tr></thead>
-            <tbody>
-              <tr><td>Names who owns it</td><td><span class="res partial">◐ Partial</span><span class="ev">“Draft for Helen Achebe” names the reader, not the owner.</span></td></tr>
-              <tr><td>Says how we’ll know it worked</td><td><span class="res partial">◐ Partial</span><span class="ev">“Back near 2%” has no date, and “X days” is not defined.</span></td></tr>
-              <tr><td>Keeps the same scope</td><td><span class="res partial">◐ Partial</span><span class="ev">The 32-second fill time appears only under Success. The prototype fixes 3 days and half a “no”, which the brief leaves open.</span></td></tr>
-              <tr><td>Explains the problem before the fix</td><td><span class="res pass">✓ Pass</span><span class="ev">The people, the problem and the numbers come before “What we’d build”.</span></td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="verdict"><span class="res partial">◐ Ready after small fixes</span><span>It caught the missing owner, which three AI reviewers playing Helen had missed. The three fixes are still open.</span></p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 13 · Every Monday -->
-<section class="slide" id="s-monday" data-title="Every Monday">
-  <div class="wrap">
-    <p class="eyebrow"><b>Part 4 · Keeping it from happening again</b><span class="module-chip"><span>M6</span>Sidekicks</span></p>
-    <h2>Every Monday morning, before anything ships</h2>
-    <div class="cols even">
-      <div class="stack">
-        <figure class="prompt">
-          <figcaption><span class="who">I asked</span><span class="src">05-super-speed/prompts.md · #11, saved with Module 5</span></figcaption>
-          <blockquote><span class="caret" aria-hidden="true">&gt;</span><span class="ptext">Schedule review-checklist to run every Monday morning, and let me know what it finds. Nothing needs to be ready for it to fire today. I'm setting the habit, not waiting on the result.</span></blockquote>
-        </figure>
-        <dl class="facts">
-          <div><dt>Reads</dt><dd>Every <code class="mono">brief*.md</code> in the course folder</dd></div>
-          <div><dt>Checks</dt><dd>The four checks, with quotes as evidence</dd></div>
-          <div><dt>Never</dt><dd>Edits, deletes, commits or publishes</dd></div>
-          <div><dt>Reports</dt><dd>In French, in the app’s Scheduled section</dd></div>
-        </dl>
-        <p class="fine">Runs while the Claude app is open; if it’s closed on Monday morning, it runs at the next launch.</p>
-      </div>
-      <div class="stack">
-        <p class="finding-label">How this would have changed 4.2</p>
-        <div class="paths">
-          <div class="path"><span class="lab">What happened in 4.2</span><ol class="chain"><li>One-line brief, reviewed 30 Jun</li><li>Built as briefed</li><li>Shipped 12 Aug</li><li class="bad">No measure to watch</li><li class="bad">Explained away for weeks</li></ol></div>
-          <div class="path"><span class="lab">With the Monday check</span><ol class="chain"><li>Brief drafted</li><li class="bad">Monday: no problem, no measure</li><li>Owner adds both</li><li class="good">Ships with a number to watch</li><li class="good">A bad week shows up as a number</li></ol></div>
-        </div>
-      </div>
-    </div>
-    <div class="mondays" aria-label="The next five Monday runs">
-      <div class="monday first"><span class="w">First run</span><span class="d">Mon 2 Nov</span><span class="what">about 08:10</span></div>
-      <div class="monday"><span class="w">Weekly</span><span class="d">Mon 9 Nov</span><span class="what">about 08:10</span></div>
-      <div class="monday"><span class="w">Weekly</span><span class="d">Mon 16 Nov</span><span class="what">about 08:10</span></div>
-      <div class="monday"><span class="w">Weekly</span><span class="d">Mon 23 Nov</span><span class="what">about 08:10</span></div>
-      <div class="monday"><span class="w">Weekly</span><span class="d">Mon 30 Nov</span><span class="what">about 08:10</span></div>
-    </div>
-  </div>
-</section>
-
-<!-- 14 · Decisions -->
+<!-- 12 · Decisions -->
 <section class="slide" id="s-decide" data-title="Decisions for Helen">
   <div class="wrap">
     <p class="eyebrow"><b>What I need</b></p>
@@ -1340,42 +1191,23 @@ footer { color: var(--muted); font-size: 0.8rem; max-width: 80ch; }
           <li>Any unwritten reason for 60 seconds (Marcus)</li>
           <li>Meteor Mite in person, through Kip and Sofia Marino</li>
         </ul>
-        <h3>My next steps</h3>
-        <ul class="todo">
-          <li>Fix the three gaps the checklist found in my brief</li>
-          <li>Share the click-through with Helen</li>
-        </ul>
       </div>
     </div>
-    <p class="source">Decisions and trade-offs are copied from <code>05-super-speed/brief.md</code>.</p>
   </div>
 </section>
 
-<!-- 15 · How this was made -->
-<section class="slide" id="s-made" data-title="How this report was made">
+<!-- 13 · Sources -->
+<section class="slide" id="s-made" data-title="Sources">
   <div class="wrap">
     <p class="eyebrow"><b>About this report</b></p>
-    <h2>How this report was made</h2>
-    <div class="cols even">
-      <div class="stack">
-        <figure class="prompt">
-          <figcaption><span class="who">I asked</span><span class="src">31 Oct 2026 · not yet in a prompts.md file</span></figcaption>
-          <blockquote><span class="caret" aria-hidden="true">&gt;</span><span class="ptext">Read CLAUDE.md and all six prompts.md files in this repo. For each module, pull one real finding or artifact and the exact prompt I wrote that produced it. Build a single HTML presentation that says plainly what happened with Release 4.2, backs it up with those findings and prompts, shows the fix through my prototype, and explains how my skill keeps it from happening again. Make it visually engaging, not just text. Save it as final-report.html, then save my work.</span></blockquote>
-        </figure>
-        <p class="fine">Prompts on every slide are copied word for word from the prompts.md files, typos included. The two Module 6 prompts were saved with Module 5’s, so <code class="mono">06-sidekicks/prompts.md</code> is still empty.</p>
-      </div>
-      <div class="stack">
-        <h3>Sources</h3>
-        <ul class="sources">
-          <li><code>CLAUDE.md</code> working context and the six <code>prompts.md</code> files</li>
-          <li>Rook database: <code>pings</code>, <code>callouts</code>, <code>responders</code>, <code>support_tickets</code> (29 Jun – 7 Sep 2026)</li>
-          <li>Rook wiki: Q3 roadmap briefs, release 4.2 page, September customer interviews</li>
-          <li>Routing code: <code>config.py</code>, <code>history.py</code>, <code>offer.py</code>, <code>CHANGELOG.md</code></li>
-          <li><code>05-super-speed/brief.md</code> and <code>prototype.html</code></li>
-          <li><code>.claude/skills/review-checklist/SKILL.md</code></li>
-        </ul>
-        <p class="fine">The data figures were rechecked against the Rook database on 31 Oct 2026; the decisions table is copied from the brief. Rook Industries is a fictional company from Product School’s “Claude Code for PMs” course.</p>
-      </div>
+    <h2>Sources</h2>
+    <div class="stack" style="max-width:760px">
+      <ul class="sources">
+        <li>Rook database: <code>pings</code>, <code>callouts</code>, <code>responders</code>, <code>support_tickets</code> (29 Jun – 7 Sep 2026)</li>
+        <li>Rook wiki: Q3 roadmap, release 4.2 page, September customer interviews</li>
+        <li>Routing code: <code>config.py</code>, <code>history.py</code>, <code>offer.py</code>, <code>CHANGELOG.md</code></li>
+      </ul>
+      <p class="fine">Rook Industries and everyone named here are fictional.</p>
     </div>
   </div>
 </section>

@@ -1,6 +1,7 @@
 # No responder goes quiet without anyone knowing
 
-**Draft for Helen Achebe · Rook Dispatch · October 2026** ·
+**Owner: Ralph, PM, Rook Dispatch** · Draft for Helen Achebe · October 2026 ·
+**Next step:** Helen's five decisions below, which I then take to Wen Li and Marcus Oyelaran ·
 **Click-through:** [Gone Quiet Prototype](https://claude.ai/artifact/9gmqGBSYEVz5NWbbkQW9qd) (Kip's card and Meteor Mite's phone; file: prototype.html)
 
 ## The problem
@@ -8,7 +9,7 @@
 Kip looks after Meteor Mite and The Gale, who both cover Eastgate. Since 4.2
 (12 August), Mite's phone has almost stopped ringing and The Gale's never stops.
 Kip says Mite "thinks Mite's been forgotten" and The Gale is "exhausted". Nothing
-in the console told him why, and he has never filed a ticket, so tickets missed it.
+in the console explained why, and Kip has never filed a ticket, so tickets missed it.
 
 | | Before 4.2 | Since 4.2 |
 |---|---|---|
@@ -17,6 +18,7 @@ in the console told him why, and he has never filed a ticket, so tickets missed 
 | The Gale: pings a week | about 13 | **about 21** by late August |
 | All responders: pings missed | 2.3% (1 in 44) | **18%** (1 in 6); 13% latest week |
 | Time to answer a ping | 90 seconds | **60 seconds** |
+| Time to fill a callout | about 21 seconds | **about 32 seconds** |
 
 Four responders went quiet this way, but everyone is hit: the other 12 miss about
 6% of pings in their own area, up from 0.6%. Data runs to 6 September.
@@ -50,10 +52,17 @@ We are **not** reverting the proximity change, which wide-area responders asked 
 | Recovery over time | Today places never recover on their own | Slow drift back |
 | Warn the handler after X quiet days | Too soon is noise, too late is silence | Set with Kip and Sofia |
 
+*The click-through uses working values so it can be clicked: 90 seconds, half a "no", and a
+warning after 3 quiet days. They are not decisions.*
+
 ## Success (proposed)
 
-Missed pings back near 2%; jobs filled in about 21 seconds again (32 now); no
-available responder quiet for X days without their handler told. Ravi Menon tracks it weekly.
+Four weeks after the fix ships, all three should hold. Ravi Menon tracks them weekly, and I
+review them with Helen at the four-week mark.
+- Missed pings at 3% or less (18% since 4.2; 2.3% before).
+- Callouts filled in about 21 seconds again (32 now).
+- No available responder stays quiet past the warning threshold (3 days to start) without
+  their handler being told. Today, handlers are never told.
 
 ## Still to confirm
 
